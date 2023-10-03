@@ -1,0 +1,10 @@
+@import '../../Themes/variables';
+
+.content-container {
+    background: $dark-background;
+    width: 95%;
+    height: 95%;
+    position: relative;
+    border-radius: 8px;
+    border: 1px solid $sidebar-border;
+}

@@ -1,0 +1,32 @@
+@import '../../Themes/variables';
+
+.list-item {
+    width: 187px;
+    font-size: 22px;
+    margin: 8px;
+    padding: 8px 42px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    background-color: $dark-background;
+    transition: background-color 0.3s ease-in; 
+
+    &:hover {
+        background-color: $app-background;
+    }
+
+    .notification-indicator {
+        background: $govini-orange;
+        margin: 0 8px;
+        padding: 6px;
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+}

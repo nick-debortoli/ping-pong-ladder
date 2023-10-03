@@ -1,0 +1,40 @@
+.app-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 8px;
+
+    .app-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+
+        .flame {
+            position: absolute;
+            height: 80px;
+            top: 28px;
+            left: 40px;
+            opacity: 0.4;
+        }
+    
+        .pong-icon {
+            height: 64px;
+            position: relative;
+            z-index: 10;
+            cursor: pointer;
+        }
+    
+        .govini-text {
+            height: 60px;
+        }
+    }
+
+    .app-subtitle {
+        font-family: 'Tourney', sans-serif;
+        font-weight: 900;
+        font-style: italic;
+        margin: 8px;
+        letter-spacing: 0.7px;
+    }
+}
