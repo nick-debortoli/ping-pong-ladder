@@ -7,8 +7,7 @@ const Sidebar: React.FC = () => {
         <section className='sidebar' id='sidebar'>
             <AppTitle />
             <NavRail />
-            
-      </section>
+         </section>
     )
 }
 

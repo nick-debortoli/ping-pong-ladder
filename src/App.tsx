@@ -1,12 +1,15 @@
 import './App.scss';
 import MainContent from './Components/MainContent/MainContent';
 import Sidebar from './Components/Sidebar/Sidebar';
+import { AppProvider } from './AppContext';
 
-const App = () => {
+const App: React.FC = () => {
   return (
     <div id='app' className='app'>
-      <Sidebar />
-      <MainContent />
+      <AppProvider>
+        <Sidebar />
+        <MainContent />
+      </AppProvider>
     </div>
   )
 }
