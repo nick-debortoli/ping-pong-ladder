@@ -1,0 +1,36 @@
+@import "../../Themes/variables";
+
+.signin-textbox {
+  width: 80%;
+  margin: 8px;
+  padding: 10px;
+  font-size: 18px;
+}
+
+.signin-btn {
+  background: $govini-orange;
+  width: 85%;
+  border-radius: 4px;
+  margin: 16px;
+}
+
+.signin-link {
+  margin: 4px;
+
+  span {
+    color: $link-orange;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+.signin-title,
+.signin-container {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.signin-title {
+  top: calc(50% - 250px);
+}

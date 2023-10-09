@@ -1,11 +1,11 @@
 import './NavRail.scss';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import FormatListNumberedOutlinedIcon from '@mui/icons-material/FormatListNumberedOutlined';
-import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
-import Person4OutlinedIcon from '@mui/icons-material/Person4Outlined';
+// import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
+// import Person4OutlinedIcon from '@mui/icons-material/Person4Outlined';
 import NavItem from './NavItem';
 
-import { STANDINGS, RESULTS, CHALLENGES, PLAYERS } from '../../AppConstants';
+import { STANDINGS, RESULTS } from '../../AppConstants';
 
 const NavRail: React.FC = () => {
     return (
@@ -13,8 +13,8 @@ const NavRail: React.FC = () => {
             <ul>
                 <NavItem icon={<FormatListNumberedOutlinedIcon />} section={STANDINGS} hasIndicator={false} />
                 <NavItem icon={<AccountTreeOutlinedIcon />} section={RESULTS} hasIndicator={false} />
-                <NavItem icon={<EmojiEventsOutlinedIcon />} section={CHALLENGES} hasIndicator={true} />
-                <NavItem icon={<Person4OutlinedIcon />} section={PLAYERS} hasIndicator={false} />
+                {/* <NavItem icon={<EmojiEventsOutlinedIcon />} section={CHALLENGES} hasIndicator={true} />
+                <NavItem icon={<Person4OutlinedIcon />} section={PLAYERS} hasIndicator={false} /> */}
             </ul>
         </nav>
     )

@@ -1,0 +1,18 @@
+@import "../../Themes/variables";
+
+.signup-btn {
+  background: $govini-orange;
+  width: 85%;
+  border-radius: 4px;
+  margin: 16px;
+}
+
+.signup-link {
+  margin: 4px;
+
+  span {
+    color: $link-orange;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
