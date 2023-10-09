@@ -1,7 +1,9 @@
 @import '../../Themes/variables';
 
 .list-item {
-    width: 187px;
+    width: 271px;
+    height: 51px;
+    box-sizing: border-box;
     font-size: 22px;
     margin: 8px;
     padding: 8px 42px;
@@ -11,10 +13,19 @@
     cursor: pointer;
     background-color: $dark-background;
     transition: background-color 0.3s ease-in; 
+    letter-spacing: 1.2px;
 
-    &:hover {
+    &:hover, &.focused-list-item {
         background-color: $app-background;
     }
+
+    &.focused-list-item {
+        border-top: 1px solid $sidebar-border;
+        border-bottom: 1px solid $sidebar-border;
+
+    }
+
+
 
     .notification-indicator {
         background: $govini-orange;

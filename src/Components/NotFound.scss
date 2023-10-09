@@ -1,0 +1,32 @@
+@import '../Themes/variables';
+
+
+    .error-title {
+        font-family: 'Tourney', sans-serif;
+        font-weight: 900;
+        margin: 16px;
+    }
+
+    .humbler-message {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: auto;
+
+        .error-subtitle {
+            color: $govini-orange;
+        }
+
+        .error-text {
+            font-family: 'Tourney', sans-serif;
+            font-style: italic;
+            font-weight: 900;
+        }
+    }
+
+    .humbler-message  > * {
+        margin: 5px;
+    }
+
+

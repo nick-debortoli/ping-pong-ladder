@@ -1,14 +1,17 @@
 import './Sidebar.scss';
-import AppTitle from './AppTitle';
+import AppTitle from '../AppTitle/AppTitle';
 import NavRail from './NavRail';
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+    is404?: boolean;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({is404}) => {
     return (
         <section className='sidebar' id='sidebar'>
             <AppTitle />
-            <NavRail />
-            
-      </section>
+            {!is404 && <NavRail />}
+         </section>
     )
 }
 

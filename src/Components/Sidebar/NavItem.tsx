@@ -1,17 +1,23 @@
 import { ReactNode } from "react";
 import './NavItem.scss';
+import { useAppContext } from "../../AppContext";
 
 interface NavItemProps {
     icon: ReactNode;
-    text: string;
+    section: string;
     hasIndicator: boolean;
 }
 
-const NavItem: React.FC<NavItemProps> = ({icon, text, hasIndicator}) => {
+
+const NavItem: React.FC<NavItemProps> = ({icon, section, hasIndicator}) => {
+    const { currentSection, changeSection } = useAppContext();
+
+    const itemClass = `list-item ${currentSection === section ? 'focused-list-item' : ''}`
+
     return (
-        <li className="list-item">
+        <li className={itemClass} onClick={() => changeSection(section)}>
             {icon}
-            {text}
+            {section}
             {hasIndicator && 
                 <div className="notification-indicator">
                     1
