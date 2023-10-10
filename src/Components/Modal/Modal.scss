@@ -24,3 +24,10 @@
 .modal-title {
     top: -80px
 }
+
+
+@media (max-height: 880px) {
+  .modal {
+    top: calc(50% + 75px);
+  }
+}

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import './NavItem.scss';
-import { useAppContext } from "../../AppContext";
+import { useSectionContext } from "../../Contexts/SectionContext";
 
 interface NavItemProps {
     icon: ReactNode;
@@ -10,7 +10,7 @@ interface NavItemProps {
 
 
 const NavItem: React.FC<NavItemProps> = ({icon, section, hasIndicator}) => {
-    const { currentSection, changeSection } = useAppContext();
+    const { currentSection, changeSection } = useSectionContext();
 
     const itemClass = `list-item ${currentSection === section ? 'focused-list-item' : ''}`
 

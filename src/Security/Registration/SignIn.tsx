@@ -11,7 +11,6 @@ interface SignInProps {
 
 const SingIn: React.FC<SignInProps> = ({ handleChange }) => {
   const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
 
@@ -20,10 +19,10 @@ const SingIn: React.FC<SignInProps> = ({ handleChange }) => {
   }, [user, navigate]);
 
   const handleSignIn = async (
-    email: string,
-    password: string
+    email: string
   ): Promise<void> => {
-    await signIn(email, password);
+    const defaultPassowrd = import.meta.env.VITE_DEFAULT_PASSWORD;
+    await signIn(email, defaultPassowrd);
   };
 
   return (
@@ -35,22 +34,12 @@ const SingIn: React.FC<SignInProps> = ({ handleChange }) => {
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Govini E-mail Address"
       />
-      <input
-        type="password"
-        className="signin-textbox"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
       <button
         className="signin-btn"
-        onClick={() => handleSignIn(email, password)}
+        onClick={() => handleSignIn(email)}
       >
         Sign In
       </button>
-      <div className="signin-link">
-        <span>Forgot Password</span>
-      </div>
       <div className="signin-link">
         Don't have an account?{" "}
         <span onClick={() => handleChange(SIGN_UP)}>Register</span> now.

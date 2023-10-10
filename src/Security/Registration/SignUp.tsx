@@ -13,8 +13,6 @@ interface SignUpProps {
 
 interface FormData {
   email: string;
-  password: string;
-  confirmPassword: string;
   firstName: string;
   lastName: string;
 }
@@ -22,31 +20,23 @@ interface FormData {
 const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
   const [formData, setFormData] = useState<FormData>({
     email: "",
-    password: "",
-    confirmPassword: "",
     firstName: "",
     lastName: "",
   });
 
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
-  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleSignUp = async (formData: FormData): Promise<void> => {
-    const { email, password, confirmPassword, firstName, lastName } = formData;
+    const { email, firstName, lastName } = formData;
     if (!isEmailValid) {
       alert("Invalid email format - must use a Govini email address");
-    } else if (!isPasswordValid) {
-      alert(
-        "Password must contain at least one letter, one number, one special character, and be at least 8 characters long."
-      );
-    } else if (password !== confirmPassword) {
-      alert("Passwords do not match");
     } else if (firstName.trim() === "" || lastName.trim() === "") {
       alert("Please enter your full name");
     } else {
       try {
-        await signUp(email, password);
+        const defaultPassowrd = import.meta.env.VITE_DEFAULT_PASSWORD;
+        await signUp(email, defaultPassowrd);
         await addPlayer({email, firstName, lastName, elo: BASE_ELO, wins: 0, losses: 0});
         navigate("/home");
       } catch (error) {
@@ -79,12 +69,6 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
     setIsEmailValid(emailRegex.test(formData.email));
   }, [formData.email]);
 
-  useEffect(() => {
-    const passwordRegex =
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-    setIsPasswordValid(passwordRegex.test(formData.password));
-  }, [formData.password]);
-
   return (
     <>
       <TextInput
@@ -93,20 +77,6 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
         value={formData.email}
         onChange={handleInputChange}
         placeholder="Govini E-mail Address"
-      />
-      <TextInput
-        type="password"
-        name="password"
-        value={formData.password}
-        onChange={handleInputChange}
-        placeholder="Password"
-      />
-      <TextInput
-        type="password"
-        name="confirmPassword"
-        value={formData.confirmPassword}
-        onChange={handleInputChange}
-        placeholder="Confirm Password"
       />
       <TextInput
         type="text"
