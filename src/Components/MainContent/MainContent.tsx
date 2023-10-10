@@ -1,9 +1,9 @@
 import './MainContent.scss';
 import ContentContainer from './ContentContainer';
-import { useAppContext } from '../../AppContext';
+import { useSectionContext } from '../../Contexts/SectionContext';
 
 const MainContent: React.FC = () => {
-    const { currentSection } = useAppContext();
+    const { currentSection } = useSectionContext();
 
     return (
         <div className="main-content">

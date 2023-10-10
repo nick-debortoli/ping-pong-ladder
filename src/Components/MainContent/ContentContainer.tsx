@@ -1,12 +1,12 @@
 import './ContentContainer.scss';
-import { useAppContext } from '../../AppContext';
+import { useSectionContext } from '../../Contexts/SectionContext';
 import { ReactElement } from 'react';
 import { STANDINGS, RESULTS } from '../../AppConstants';
 import StandingsContainer from '../Standings/StandingsContainer';
 import ResultsContainer from '../Results/ResultsContainer';
 
 const ContentContainer: React.FC = () => {
-    const { currentSection } = useAppContext();
+    const { currentSection } = useSectionContext();
     let content: ReactElement;
 
     switch(currentSection) {

@@ -41,7 +41,7 @@ export const signIn = async (
     return credentials;
   } catch (e) {
     console.error(e);
-    alert('Incorrect email or password.')
+    alert('Incorrect email.')
     return null;
   }
 };
