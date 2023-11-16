@@ -41,7 +41,7 @@ export const signIn = async (
     return credentials;
   } catch (e) {
     console.error(e);
-    alert('Incorrect email.')
+    alert("Incorrect email.");
     return null;
   }
 };
@@ -53,4 +53,3 @@ export function firebaseSignOut() {
 export function resetPassword(email: string) {
   return sendPasswordResetEmail(auth, email);
 }
-
