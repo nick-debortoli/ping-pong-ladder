@@ -1,35 +1,50 @@
 import "./SubmitResults.scss";
 import { useState } from "react";
 import { usePlayers } from "../../Contexts/PlayersContext";
-import { Result } from "../../Types/dataTypes";
+import { Office, Player, Result } from "../../Types/dataTypes";
+import { addMatch } from "../../database/firestore";
 
 const SubmitResults: React.FC = () => {
-  const [resultsData, setResultsData] = useState<Result>({
+  const defaultResultsData: Result = {
     playerA: "",
     playerB: "",
     playerAScore: 0,
     playerBScore: 0,
-    winner: "",
-  });
+    office: Office.InterOffice,
+  };
 
+  const [resultsData, setResultsData] = useState<Result>(defaultResultsData);
   const { players } = usePlayers();
+  const [playersList, setPlayersList] = useState<Player[]>(players);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
+  const handleOfficeChange = (office: string) => {
+    let newPlayers = players;
+
+    if (office === Office.PGH || office === Office.DC) {
+      newPlayers = players.filter((player) => player.office === office);
+    }
+
+    setPlayersList(newPlayers);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
     if (name === "playerA" || name === "playerB" || name === "winner") {
-      console.log(name, value)
-      const selectedPlayer  = players.find((player) => player.id === value);
-      console.log(selectedPlayer)
-
+      const selectedPlayer = players.find((player) => player.id === value);
       setResultsData({ ...resultsData, [name]: selectedPlayer });
+    } else if (name === "matchLocation") {
+      handleOfficeChange(value);
+      setResultsData({ ...resultsData, office: value });
     } else {
       setResultsData({ ...resultsData, [name]: value });
     }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("Form Data:", resultsData);
+  const handleSubmit = async (e): Promise<void> => {
+    e.preventDefault();
+    await addMatch(resultsData);
+    setPlayersList(players);
+    setResultsData(defaultResultsData);
   };
 
   const getPlayerName = (playerType: string): string => {
@@ -49,17 +64,29 @@ const SubmitResults: React.FC = () => {
       return playerA.id;
     } else if (playerType === "B" && !!playerB) {
       return playerB.id;
-
     }
 
     return "";
   };
 
-
   return (
     <div className="submit-results">
       <h3 className="submit-title">Submit Results</h3>
       <form className="results-form" onSubmit={handleSubmit}>
+        <label>
+          Match Location:
+          <select
+            name="matchLocation"
+            value={resultsData.office}
+            onChange={handleChange}
+          >
+            {Object.values(Office).map((office) => (
+              <option key={office} value={office}>
+                {office}
+              </option>
+            ))}
+          </select>
+        </label>
         <label>
           Player One:
           <select
@@ -68,7 +95,7 @@ const SubmitResults: React.FC = () => {
             onChange={handleChange}
           >
             <option value=""> </option>
-            {players.map((player) => (
+            {playersList.map((player) => (
               <option key={player.id} value={player.id}>
                 {player.firstName} {player.lastName}
               </option>
@@ -84,7 +111,7 @@ const SubmitResults: React.FC = () => {
             onChange={handleChange}
           >
             <option value=""> </option>
-            {players.map((player) => (
+            {playersList.map((player) => (
               <option key={player.id} value={player.id}>
                 {player.firstName} {player.lastName}
               </option>
@@ -93,7 +120,7 @@ const SubmitResults: React.FC = () => {
         </label>
 
         <label>
-          Player One Score:
+          {resultsData.playerA ? getPlayerName("A") : "Player One"} Score:
           <input
             type="number"
             name="playerAScore"
@@ -103,7 +130,7 @@ const SubmitResults: React.FC = () => {
         </label>
 
         <label>
-          Player Two Score:
+          {resultsData.playerB ? getPlayerName("B") : "Player Two"} Score:
           <input
             type="number"
             name="playerBScore"
@@ -112,7 +139,7 @@ const SubmitResults: React.FC = () => {
           />
         </label>
 
-        <div>
+        {/* <div>
           <label>
             Winner:
             <input
@@ -132,7 +159,7 @@ const SubmitResults: React.FC = () => {
             />
             {getPlayerName("B") || "Player Two"}
           </label>
-        </div>
+        </div> */}
 
         <button type="submit">Submit</button>
       </form>

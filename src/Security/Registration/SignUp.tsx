@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { addPlayer } from "../../database/firestore";
 import { Error } from "../../Types/errorTypes";
 import TextInput from "../../Components/TextInput/TextInput";
+import DropdownSelect from "../../Components/DropdownSelect/DropdownSelect";
 
 interface SignUpProps {
   handleChange: (type: string) => void;
@@ -15,6 +16,7 @@ interface FormData {
   email: string;
   firstName: string;
   lastName: string;
+  office: string;
 }
 
 const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
@@ -22,13 +24,14 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
     email: "",
     firstName: "",
     lastName: "",
+    office: "PGH",
   });
 
   const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleSignUp = async (formData: FormData): Promise<void> => {
-    const { email, firstName, lastName } = formData;
+    const { email, firstName, lastName, office } = formData;
     if (!isEmailValid) {
       alert("Invalid email format - must use a Govini email address");
     } else if (firstName.trim() === "" || lastName.trim() === "") {
@@ -37,7 +40,15 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
       try {
         const defaultPassowrd = import.meta.env.VITE_DEFAULT_PASSWORD;
         await signUp(email, defaultPassowrd);
-        await addPlayer({email, firstName, lastName, elo: BASE_ELO, wins: 0, losses: 0});
+        await addPlayer({
+          email,
+          firstName,
+          lastName,
+          elo: BASE_ELO,
+          wins: 0,
+          losses: 0,
+          office,
+        });
         navigate("/home");
       } catch (error) {
         const newError = error as Error;
@@ -60,6 +71,13 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
+    }));
+  };
+
+  const handleDropdownChange = (selectedOffice) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      office: selectedOffice,
     }));
   };
 
@@ -91,6 +109,15 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
         value={formData.lastName}
         onChange={handleInputChange}
         placeholder="Last Name"
+      />
+      <DropdownSelect
+        id="office-select"
+        label="Select Govini Office:"
+        onChange={handleDropdownChange}
+        dropdownOptions={[
+          { value: "PGH", label: "PGH" },
+          { value: "DC", label: "DC" },
+        ]}
       />
       <button className="signup-btn" onClick={() => handleSignUp(formData)}>
         Register
