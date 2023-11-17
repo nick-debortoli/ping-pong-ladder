@@ -18,9 +18,7 @@ const SingIn: React.FC<SignInProps> = ({ handleChange }) => {
     if (user) navigate("/home");
   }, [user, navigate]);
 
-  const handleSignIn = async (
-    email: string
-  ): Promise<void> => {
+  const handleSignIn = async (email: string): Promise<void> => {
     const defaultPassowrd = import.meta.env.VITE_DEFAULT_PASSWORD;
     await signIn(email, defaultPassowrd);
   };
@@ -32,12 +30,10 @@ const SingIn: React.FC<SignInProps> = ({ handleChange }) => {
         className="signin-textbox"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && handleSignIn(email)}
         placeholder="Govini E-mail Address"
       />
-      <button
-        className="signin-btn"
-        onClick={() => handleSignIn(email)}
-      >
+      <button className="signin-btn" onClick={() => handleSignIn(email)}>
         Sign In
       </button>
       <div className="signin-link">

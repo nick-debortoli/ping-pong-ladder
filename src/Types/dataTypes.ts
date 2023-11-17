@@ -17,9 +17,9 @@ export interface Standing extends Omit<Player, "email" | "office"> {
 }
 
 export enum Office {
-  InterOffice = "Inter-Office",
   PGH = "PGH",
   DC = "DC",
+  InterOffice = "Inter-Office",
 }
 
 export interface Result {
