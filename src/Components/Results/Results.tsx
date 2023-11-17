@@ -30,7 +30,7 @@ const Results: React.FC = () => {
 
   return (
     <div className="results">
-      <h3 className="submit-title">Recent Results</h3>
+      <h3 className="results-title">Recent Matches</h3>
       {recentMatches.map((match: MatchInfo) => (
         <div className="recent-result">
           <div className="player-info-container">
@@ -40,9 +40,15 @@ const Results: React.FC = () => {
             </div>
 
             <p className="defeated">def</p>
-            <p className="player-bame">{getPlayerName(match.loserId)}</p>
+            <div className="player-info">
+              <p className="player-name">{getPlayerName(match.loserId)}</p>
+              <p className="player-score">{match.loserScore}</p>
+            </div>
           </div>
-          <div className="match-info"></div>
+          <div className="match-info">
+            <p>Date: {match.date}</p>
+            <p>Location: {match.office}</p>
+          </div>
         </div>
       ))}
     </div>

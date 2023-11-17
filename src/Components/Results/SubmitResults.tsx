@@ -10,7 +10,7 @@ const SubmitResults: React.FC = () => {
     playerB: "",
     playerAScore: 0,
     playerBScore: 0,
-    office: Office.InterOffice,
+    office: Office.PGH,
   };
 
   const [resultsData, setResultsData] = useState<Result>(defaultResultsData);

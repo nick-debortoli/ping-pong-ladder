@@ -12,7 +12,7 @@ export interface Player extends BasePlayer {
   id: string;
 }
 
-export interface Standing extends Omit<Player, "email"> {
+export interface Standing extends Omit<Player, "email" | "office"> {
   rank: number;
 }
 
@@ -32,8 +32,9 @@ export interface Result {
 
 export interface MatchInfo {
   winnerScore: number;
-  loserBScore: number;
+  loserScore: number;
   winnerId: string;
   loserId: string;
   office: Office;
+  date: string;
 }

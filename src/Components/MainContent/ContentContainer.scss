@@ -3,10 +3,11 @@
 .content-container {
     background: $dark-background;
     width: 95%;
-    height: 100%;
+    height: calc(90% - 75px);
     box-sizing: border-box;
-    margin: 7.5% 0 2.5% 0;
+    margin: calc(7.5% + 50px) 0 calc(2.5% + 25px) 0;
     position: relative;
     border-radius: 8px;
     border: 1px solid $sidebar-border;
+    overflow: hidden;
 }

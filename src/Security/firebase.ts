@@ -37,6 +37,7 @@ export const signIn = async (
   password: string
 ): Promise<UserCredential | null> => {
   try {
+    console.log()
     const credentials = await signInWithEmailAndPassword(auth, email, password);
     return credentials;
   } catch (e) {
