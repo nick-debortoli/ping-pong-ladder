@@ -3,6 +3,7 @@ import { getRecentMatches } from "../../database/firestore";
 import "./Results.scss";
 import { MatchInfo } from "../../Types/dataTypes";
 import { usePlayers } from "../../Contexts/PlayersContext";
+import { formatDateToString } from "../../Utils/dateUtils";
 
 const Results: React.FC = () => {
   const [recentMatches, setRecentMatches] = useState<MatchInfo[]>([]);
@@ -46,7 +47,7 @@ const Results: React.FC = () => {
             </div>
           </div>
           <div className="match-info">
-            <p>Date: {match.date}</p>
+            <p>Date: {formatDateToString(match.date)}</p>
             <p>Location: {match.office}</p>
           </div>
         </div>

@@ -1,13 +1,18 @@
-.standings-heading {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    font-weight: 700;
+@import "../../Themes/variables";
 
-    .standings-title {
-        flex: 1;
-        text-align: center;
-    }
+.standings-heading {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+  background: $dark-background;
+
+  .standings-title {
+    flex: 1;
+    text-align: center;
+  }
 }
