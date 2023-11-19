@@ -1,28 +1,71 @@
-@import '../../Themes/variables';
+@import "../../Themes/variables";
 
 .results {
-    position: relative;
-    height: 100%;
-    background-color: $app-background;
-    border-radius: 8px;
+  position: relative;
+  height: 100%;
+  background-color: $app-background;
+  border-radius: 8px;
 
-    .results-title {
-        font-size: 32px;
-        font-weight: 400;
-        position: absolute;
-        top: 0;
-        left: 24px;
+  .results-title {
+    font-size: 2em;
+    font-weight: 400;
+    position: absolute;
+    top: 0;
+    left: 24px;
+  }
+
+  .recent-result {
+    height: 175px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    background-color: $light-background;
+    border-radius: 4px;
+    width: 90%;
+    margin: 5px 5%;
+    border: 1px solid $sidebar-border;
+
+    .player-info-container,
+    .match-info {
+      height: 100%;
+    }
+    .player-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+
+      .player-name {
+        font-family: "Tourney", sans-serif;
+        font-style: italic;
+        font-weight: 900;
+      }
+
+      .player-score {
+        font-weight: 200;
+      }
     }
 
-    .recent-result {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: $light-background;
-        border-radius: 4px;
-        width: 90%;
-        margin: 5px 5%;
-        border: 1px solid $sidebar-border;
+    .defeated {
+      color: $govini-orange;
     }
 
+    .match-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      position: relative;
+      top: 12px;
+
+      p {
+        margin: 4px;
+      }
+    }
+  }
+
+  .recent-result:first-of-type {
+    margin-top: 5.5em;
+  }
 }
