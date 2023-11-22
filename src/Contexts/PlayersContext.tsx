@@ -1,89 +1,84 @@
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import { getPlayers } from "../database/firestore";
-import { Player } from "../Types/dataTypes";
-import { firestore } from "../database/firestore";
-import { onSnapshot, collection } from "firebase/firestore";
+import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
+import { getPlayers } from '../database/firestore';
+import { Player } from '../Types/dataTypes';
+import { firestore } from '../database/firestore';
+import { onSnapshot, collection } from 'firebase/firestore';
 
 interface PlayersContextProps {
-  players: Array<Player>;
-  loading: boolean;
+    players: Array<Player>;
+    loading: boolean;
+    getPlayerById: (id: string) => Player | undefined;
 }
 
-const PlayersContext = createContext<PlayersContextProps | undefined>(
-  undefined
-);
+const PlayersContext = createContext<PlayersContextProps | undefined>(undefined);
 
 interface PlayerProviderProps {
-  children: ReactNode;
+    children: ReactNode;
 }
 
-export const PlayersProvider: React.FC<PlayerProviderProps> = ({
-  children,
-}) => {
-  const [players, setPlayers] = useState<Array<Player>>([]);
-  const [loading, setLoading] = useState(true);
+export const PlayersProvider: React.FC<PlayerProviderProps> = ({ children }) => {
+    const [players, setPlayers] = useState<Array<Player>>([]);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchPlayers = async () => {
-      const playersRef = collection(firestore, "Players");
+    useEffect(() => {
+        const fetchPlayers = async () => {
+            const playersRef = collection(firestore, 'Players');
 
-      const unsubscribe = onSnapshot(
-        playersRef,
-        (snapshot) => {
-          const playersData: Array<Player> = snapshot.docs.map((doc) => {
-            const playerData = doc.data() as Omit<Player, "id">;
-            return {
-              id: doc.id,
-              ...playerData,
-            };
-          });
+            const unsubscribe = onSnapshot(
+                playersRef,
+                (snapshot) => {
+                    const playersData: Array<Player> = snapshot.docs.map((doc) => {
+                        const playerData = doc.data() as Omit<Player, 'id'>;
+                        return {
+                            id: doc.id,
+                            ...playerData,
+                        };
+                    });
 
-          setPlayers(playersData);
-          setLoading(false);
-        },
-        (error) => {
-          console.error("Error listening to players collection: ", error);
-          setLoading(false);
-        }
-      );
+                    setPlayers(playersData);
+                    setLoading(false);
+                },
+                (error) => {
+                    console.error('Error listening to players collection: ', error);
+                    setLoading(false);
+                },
+            );
 
-      try {
-        const playersData = await getPlayers();
-        if (playersData) {
-          setPlayers(playersData);
-        }
-        setLoading(false);
-      } catch (error) {
-        // Handle error case
-        console.error("Error fetching players: ", error);
-        setLoading(false);
-      }
+            try {
+                const playersData = await getPlayers();
+                if (playersData) {
+                    setPlayers(playersData);
+                }
+                setLoading(false);
+            } catch (error) {
+                // Handle error case
+                console.error('Error fetching players: ', error);
+                setLoading(false);
+            }
 
-      return () => unsubscribe();
+            return () => unsubscribe();
+        };
+
+        fetchPlayers();
+
+        // No need to clean up, as this effect runs once after the initial render
+    }, []);
+
+    const getPlayerById = (id: string) => {
+        return players.find((player) => player.id === id);
     };
 
-    fetchPlayers();
-
-    // No need to clean up, as this effect runs once after the initial render
-  }, []); // Empty dependency array ensures that this effect runs once after the initial render
-
-  return (
-    <PlayersContext.Provider value={{ players, loading }}>
-      {children}
-    </PlayersContext.Provider>
-  );
+    return (
+        <PlayersContext.Provider value={{ players, loading, getPlayerById }}>
+            {children}
+        </PlayersContext.Provider>
+    );
 };
 
 export const usePlayers = () => {
-  const context = useContext(PlayersContext);
-  if (!context) {
-    throw new Error("usePlayers must be used within a PlayersProvider");
-  }
-  return context;
+    const context = useContext(PlayersContext);
+    if (!context) {
+        throw new Error('usePlayers must be used within a PlayersProvider');
+    }
+    return context;
 };
