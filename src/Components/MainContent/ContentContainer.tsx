@@ -9,7 +9,7 @@ const ContentContainer: React.FC = () => {
     const { currentSection } = useSectionContext();
     let content: ReactElement;
 
-    switch(currentSection) {
+    switch (currentSection) {
         case STANDINGS:
             content = <StandingsContainer />;
             break;
@@ -20,11 +20,7 @@ const ContentContainer: React.FC = () => {
             content = <></>;
     }
 
-    return (
-        <div className="content-container">
-            {content}
-        </div>
-    )
-}
+    return <div className="content-container">{content}</div>;
+};
 
 export default ContentContainer;

@@ -11,13 +11,21 @@ const NavRail: React.FC = () => {
     return (
         <nav className="side-nav">
             <ul>
-                <NavItem icon={<FormatListNumberedOutlinedIcon />} section={STANDINGS} hasIndicator={false} />
-                <NavItem icon={<AccountTreeOutlinedIcon />} section={RESULTS} hasIndicator={false} />
+                <NavItem
+                    icon={<FormatListNumberedOutlinedIcon />}
+                    section={STANDINGS}
+                    hasIndicator={false}
+                />
+                <NavItem
+                    icon={<AccountTreeOutlinedIcon />}
+                    section={RESULTS}
+                    hasIndicator={false}
+                />
                 {/* <NavItem icon={<EmojiEventsOutlinedIcon />} section={CHALLENGES} hasIndicator={true} />
                 <NavItem icon={<Person4OutlinedIcon />} section={PLAYERS} hasIndicator={false} /> */}
             </ul>
         </nav>
-    )
-}
+    );
+};
 
 export default NavRail;

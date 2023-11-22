@@ -6,13 +6,13 @@ interface SidebarProps {
     is404?: boolean;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({is404}) => {
+const Sidebar: React.FC<SidebarProps> = ({ is404 }) => {
     return (
-        <section className='sidebar' id='sidebar'>
+        <section className="sidebar" id="sidebar">
             <AppTitle />
             {!is404 && <NavRail />}
-         </section>
-    )
-}
+        </section>
+    );
+};
 
 export default Sidebar;

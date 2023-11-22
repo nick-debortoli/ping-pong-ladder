@@ -8,7 +8,7 @@ const StandingsHeading: React.FC = () => {
             <span className="standings-title">Elo</span>
             <span className="standings-title">W-L</span>
         </div>
-    )
-}
+    );
+};
 
 export default StandingsHeading;

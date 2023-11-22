@@ -4,7 +4,7 @@ import './StandingsRow.scss';
 interface StandingsRowProps {
     standing: Standing;
 }
-const StandingsRow: React.FC<StandingsRowProps> = ({standing}) => {
+const StandingsRow: React.FC<StandingsRowProps> = ({ standing }) => {
     const { rank, firstName, lastName, elo, wins, losses } = standing;
     return (
         <div className="standings-row">
@@ -13,7 +13,7 @@ const StandingsRow: React.FC<StandingsRowProps> = ({standing}) => {
             <div className="standings-cell">{elo}</div>
             <div className="standings-cell">{`${wins}-${losses}`}</div>
         </div>
-    )
-}
+    );
+};
 
 export default StandingsRow;
