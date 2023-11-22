@@ -1,0 +1,14 @@
+@import '../../Themes/variables';
+
+.office-tabs {
+    display: flex;
+    align-items: center;
+
+    .tab {
+        margin: 0 16px;
+        background-color: $app-background;
+        &.active {
+            background-color: $govini-orange;
+        }
+    }
+}
