@@ -1,18 +1,20 @@
-@import "../../Themes/variables";
+@import '../../Themes/variables';
 
 .standings-heading {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  font-weight: 700;
-  position: sticky;
-  top: 0;
-  background: $dark-background;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    padding-top: 15px;
+    transform: translateY(-4px);
+    font-weight: 700;
+    position: sticky;
+    top: 0;
+    background: $dark-background;
 
-  .standings-title {
-    flex: 1;
-    text-align: center;
-  }
+    .standings-title {
+        flex: 1;
+        text-align: center;
+    }
 }
