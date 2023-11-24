@@ -6,13 +6,16 @@ export interface BasePlayer {
     wins: number;
     losses: number;
     office: string;
+    overallRanking: number;
+    divisionRanking: number;
 }
 
 export interface Player extends BasePlayer {
     id: string;
 }
 
-export interface Standing extends Omit<Player, 'email' | 'office'> {
+export interface Standing
+    extends Omit<Player, 'email' | 'office' | 'overallRanking' | 'divisionRanking'> {
     rank: number;
 }
 
