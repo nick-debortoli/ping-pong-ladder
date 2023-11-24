@@ -31,7 +31,6 @@ export const signUp = async (email: string, password: string): Promise<void> => 
 
 export const signIn = async (email: string, password: string): Promise<UserCredential | null> => {
     try {
-        console.log();
         const credentials = await signInWithEmailAndPassword(auth, email, password);
         return credentials;
     } catch (e) {

@@ -18,14 +18,16 @@ const SubmitResults: React.FC<SubmitResultsProps> = ({ handleReloadResults }) =>
     };
 
     const [resultsData, setResultsData] = useState<Result>(defaultResultsData);
+    const [isValidResult, setIsValidResult] = useState<boolean>(false);
+
     const { players } = usePlayers();
-    const sortedPlayers = players
+    const defaultPlayers = players
         .filter((player) => player.office === Office.PGH)
         .sort((a, b) => a.firstName.localeCompare(b.firstName));
-    const [playersList, setPlayersList] = useState<Player[]>(sortedPlayers);
+    const [playersList, setPlayersList] = useState<Player[]>(defaultPlayers);
 
     const handleOfficeChange = (office: string) => {
-        let newPlayers = players;
+        let newPlayers = players.sort((a, b) => a.firstName.localeCompare(b.firstName));
 
         if (office === Office.PGH || office === Office.DC) {
             newPlayers = players
@@ -34,6 +36,16 @@ const SubmitResults: React.FC<SubmitResultsProps> = ({ handleReloadResults }) =>
         }
 
         setPlayersList(newPlayers);
+    };
+
+    const determineValidResult = (): void => {
+        const { playerA, playerB, playerAScore, playerBScore } = resultsData;
+        const isValid =
+            typeof playerA === 'object' &&
+            typeof playerB === 'object' &&
+            playerAScore !== playerBScore;
+
+        setIsValidResult(isValid);
     };
 
     const handleChange = (e) => {
@@ -47,14 +59,26 @@ const SubmitResults: React.FC<SubmitResultsProps> = ({ handleReloadResults }) =>
         } else {
             setResultsData({ ...resultsData, [name]: value });
         }
+        determineValidResult();
     };
 
     const handleSubmit = async (e): Promise<void> => {
         e.preventDefault();
-        await addMatch(resultsData);
-        setPlayersList(players);
-        setResultsData(defaultResultsData);
-        handleReloadResults(true);
+
+        const isTie = resultsData.playerAScore === resultsData.playerBScore;
+
+        if (isTie) {
+            alert('You can not submit a tie');
+        } else {
+            resultsData.playerAScore = Number(resultsData.playerAScore);
+            resultsData.playerBScore = Number(resultsData.playerBScore);
+
+            await addMatch(resultsData);
+            setPlayersList(defaultPlayers);
+            setResultsData(defaultResultsData);
+            handleReloadResults(true);
+            setIsValidResult(false);
+        }
     };
 
     const getPlayerName = (playerType: string): string => {
@@ -145,29 +169,9 @@ const SubmitResults: React.FC<SubmitResultsProps> = ({ handleReloadResults }) =>
                     />
                 </label>
 
-                {/* <div>
-          <label>
-            Winner:
-            <input
-              type="radio"
-              name="winner"
-              value={getPlayerId("A")}
-              checked={resultsData.winner === resultsData.playerA}
-              onChange={handleChange}
-            />
-            {getPlayerName("A") || "Player One"}
-            <input
-              type="radio"
-              name="winner"
-              value={getPlayerId("B")}
-              checked={resultsData.winner === resultsData.playerB}
-              onChange={handleChange}
-            />
-            {getPlayerName("B") || "Player Two"}
-          </label>
-        </div> */}
-
-                <button type="submit">Submit</button>
+                <button type="submit" className={isValidResult ? '' : 'disabled'}>
+                    Submit
+                </button>
             </form>
         </div>
     );
