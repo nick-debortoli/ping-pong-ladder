@@ -1,0 +1,28 @@
+@import './../../Themes/variables';
+
+.settings-container {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+
+    .settings-button {
+        z-index: 100;
+        border-radius: 100%;
+        background: $dark-background;
+        border: 1px solid $sidebar-border;
+        cursor: pointer;
+        &:hover {
+            background: $app-background;
+        }
+    }
+
+    .settings-modal {
+        position: fixed;
+        z-index: 100;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: $app-background;
+        border-radius: 3px;
+    }
+}
