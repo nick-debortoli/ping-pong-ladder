@@ -41,3 +41,10 @@ export interface MatchInfo {
     office: Office;
     date: string;
 }
+
+export interface BugSubmission {
+    type: string;
+    name: string;
+    email: string;
+    description: string;
+}

@@ -15,14 +15,53 @@
             background: $app-background;
         }
     }
+}
 
-    .settings-modal {
-        position: fixed;
-        z-index: 100;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: $app-background;
-        border-radius: 3px;
+.feature-request {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+
+    .form-group {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+
+        label {
+            width: 120px;
+        }
+
+        input,
+        textarea {
+            width: calc(100% - 120px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        textarea {
+            font-size: 10px;
+        }
+    }
+
+    .form-actions {
+        width: 100%;
+        display: flex;
+        margin: 12px;
+        gap: 32px;
+        align-items: center;
+        justify-content: center;
+
+        .close-button {
+            background: $app-background;
+        }
+
+        .disabled {
+            background: gray;
+            color: darkgray;
+            pointer-events: none;
+        }
     }
 }

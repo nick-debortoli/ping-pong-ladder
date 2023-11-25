@@ -11,7 +11,7 @@ import {
     limit,
     where,
 } from 'firebase/firestore';
-import { Player, BasePlayer, MatchInfo, Result } from '../Types/dataTypes';
+import { Player, BasePlayer, MatchInfo, Result, BugSubmission } from '../Types/dataTypes';
 import { app } from '../Security/firebase';
 import { calculateElo } from '../Utils/eloUtils';
 
@@ -170,5 +170,14 @@ export const getRecentMatches = async (): Promise<Array<MatchInfo> | null> => {
     } catch (error) {
         console.error('Error fetching matches: ', error);
         return null;
+    }
+};
+
+export const addBug = async (bugInfo: BugSubmission): Promise<void> => {
+    try {
+        const bugsRef = collection(firestore, 'Bugs');
+        await addDoc(bugsRef, bugInfo);
+    } catch (error) {
+        console.error('Error adding bug: ', error);
     }
 };

@@ -1,93 +1,124 @@
 import { useState } from 'react';
-import SettingsIcon from '@mui/icons-material/Settings';
-import { IconButton } from '@mui/material';
+import BugReportIcon from '@mui/icons-material/BugReport';
+import { IconButton, Tooltip, ClickAwayListener } from '@mui/material';
 import './settingsMenu.scss';
 import Modal from '../Modal/Modal';
+import { addBug } from '../../database/firestore';
+
 
 const SettingsMenu = () => {
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [formData, setFormData] = useState({
-        type: 'Feature', // Default value for the dropdown
+    const defaultFormData = {
+        type: 'Bug',
         name: '',
         email: '',
         description: '',
-    });
+    };
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [isValid, setIsValid] = useState<boolean>(false);
+    const [formData, setFormData] = useState(defaultFormData);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+        if (value && name === 'description') {
+            setIsValid(true);
+        }
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = () => {
-        // You can send an email with the formData here
-        // You'll need to implement the email sending logic
-        // Example: sendEmail(formData);
-
-        // Close the modal
+    const handleClose = () => {
         setIsModalOpen(false);
+        setIsValid(false);
+        setFormData(defaultFormData);
+    };
+
+    const handleSubmit = async () => {
+        try {
+            await addBug(formData);
+        } catch (error) {
+            console.error('Error sending email:', error);
+        }
+        handleClose();
     };
 
     return (
-        <div className="settings-container">
-            <IconButton className="settings-button" onClick={() => setIsModalOpen(true)}>
-                <SettingsIcon sx={{ color: 'white' }} />
-            </IconButton>
+        <ClickAwayListener onClickAway={handleClose}>
+            <div className="settings-container">
+                <Tooltip title="Submit bug or feature request.">
+                    <IconButton className="settings-button" onClick={() => setIsModalOpen(true)}>
+                        <BugReportIcon sx={{ color: 'white' }} />
+                    </IconButton>
+                </Tooltip>
 
-            {isModalOpen && (
-                <Modal titleText={'Submit Feature Request or Bug'}>
-                    <form>
-                        <div className="form-group">
-                            <label>Type</label>
-                            <select name="type" value={formData.type} onChange={handleInputChange}>
-                                <option value="Feature">Feature</option>
-                                <option value="Bug">Bug</option>
-                            </select>
-                        </div>
+                {isModalOpen && (
+                    <Modal>
+                        <h3>Submit Bug or Feature Request</h3>
+                        <form className="feature-request">
+                            <div className="form-group">
+                                <label>Type</label>
+                                <select
+                                    name="type"
+                                    value={formData.type}
+                                    onChange={handleInputChange}
+                                >
+                                    <option value="Feature">Feature</option>
+                                    <option value="Bug">Bug</option>
+                                </select>
+                            </div>
 
-                        <div className="form-group">
-                            <label>Name (Optional)</label>
-                            <input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleInputChange}
-                            />
-                        </div>
+                            <div className="form-group">
+                                <label>Name (Optional)</label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
 
-                        <div className="form-group">
-                            <label>Email (Optional)</label>
-                            <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleInputChange}
-                            />
-                        </div>
+                            <div className="form-group">
+                                <label>Email (Optional)</label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
 
-                        <div className="form-group">
-                            <label>
-                                Description <span style={{ color: 'red' }}>*</span>
-                            </label>
-                            <textarea
-                                name="description"
-                                value={formData.description}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
+                            <div className="form-group">
+                                <label>
+                                    Description <span style={{ color: 'red' }}>*</span>
+                                </label>
+                                <textarea
+                                    name="description"
+                                    style={{ maxWidth: '380px', maxHeight: '550px' }}
+                                    value={formData.description}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
 
-                        <div className="form-actions">
-                            <button type="button" onClick={() => setIsModalOpen(false)}>
-                                Close
-                            </button>
-                            <button type="button" onClick={handleSubmit}>
-                                Submit
-                            </button>
-                        </div>
-                    </form>
-                </Modal>
-            )}
-        </div>
+                            <div className="form-actions">
+                                <button
+                                    type="button"
+                                    className="close-button"
+                                    onClick={handleClose}
+                                >
+                                    Close
+                                </button>
+                                <button
+                                    type="button"
+                                    className={isValid ? '' : 'disabled'}
+                                    onClick={handleSubmit}
+                                >
+                                    Submit
+                                </button>
+                            </div>
+                        </form>
+                    </Modal>
+                )}
+            </div>
+        </ClickAwayListener>
     );
 };
 
