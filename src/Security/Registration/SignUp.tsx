@@ -48,6 +48,8 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
                     wins: 0,
                     losses: 0,
                     office,
+                    overallRanking: 0,
+                    divisionRanking: 0
                 });
                 navigate('/home');
             } catch (error) {

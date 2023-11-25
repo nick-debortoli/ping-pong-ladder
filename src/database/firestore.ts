@@ -9,26 +9,71 @@ import {
     query,
     orderBy,
     limit,
+    where,
 } from 'firebase/firestore';
 import { Player, BasePlayer, MatchInfo, Result } from '../Types/dataTypes';
 import { app } from '../Security/firebase';
+import { calculateElo } from '../Utils/eloUtils';
 
 export const firestore = getFirestore(app);
 
+async function updateRankings(players: Player[], rankingField: string): Promise<void> {
+    players.sort((a, b) => b.elo - a.elo);
+    for (let i = 0; i < players.length; i++) {
+        const player = players[i];
+        if (player.id) {
+            const playerRef = doc(firestore, 'Players', player.id);
+            const updateData = {
+                [rankingField]: i + 1,
+            };
+            await updateDoc(playerRef, updateData);
+        }
+    }
+}
+
+export const updateDivisionRankings = async (
+    officeOne: string,
+    officeTwo?: string,
+): Promise<void> => {
+    const offices: string[] = [];
+    offices.push(officeOne);
+
+    if (officeTwo && officeOne !== officeTwo) {
+        offices.push(officeTwo);
+    }
+
+    for (const i in offices) {
+        const office = offices[i];
+        const officePlayersQuery = query(
+            collection(firestore, 'Players'),
+            where('office', '==', office),
+        );
+        const officePlayersSnapshot = await getDocs(officePlayersQuery);
+        const officePlayers = officePlayersSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...(doc.data() as BasePlayer),
+        }));
+        await updateRankings(officePlayers, 'divisionRanking');
+    }
+};
+
+export const updateOverallRankings = async (): Promise<void> => {
+    const allPlayersQuery = query(collection(firestore, 'Players'));
+    const allPlayersSnapshot = await getDocs(allPlayersQuery);
+    const allPlayers = allPlayersSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as BasePlayer),
+    }));
+    await updateRankings(allPlayers, 'overallRanking');
+};
+
 export const addPlayer = async (playerInfo: BasePlayer): Promise<void> => {
-    const { firstName, lastName, email, elo, wins, losses, office } = playerInfo;
     try {
         const playersRef = collection(firestore, 'Players');
+        await addDoc(playersRef, playerInfo);
 
-        await addDoc(playersRef, {
-            firstName,
-            lastName,
-            email,
-            elo,
-            wins,
-            losses,
-            office,
-        });
+        await updateDivisionRankings(playerInfo.office);
+        await updateOverallRankings();
     } catch (error) {
         console.error('Error adding player: ', error);
     }
@@ -37,24 +82,18 @@ export const addPlayer = async (playerInfo: BasePlayer): Promise<void> => {
 export const getPlayers = async (): Promise<Array<Player> | null> => {
     try {
         const playersRef = collection(firestore, 'Players');
-        const playersList: Array<Player> = [];
-
         const querySnapshot = await getDocs(playersRef);
-        querySnapshot.forEach((doc) => {
-            const playerData = doc.data() as BasePlayer; // Assuming your Player type matches the structure in your Firestore documents
-            const player: Player = {
-                id: doc.id,
-                ...playerData,
-            };
-            playersList.push(player);
-        });
+
+        const playersList: Array<Player> = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...(doc.data() as BasePlayer),
+        }));
 
         return playersList;
     } catch (error) {
-        console.error('Error adding player: ', error);
+        console.error('Error fetching players: ', error);
+        return null;
     }
-
-    return null;
 };
 
 export const addMatch = async (matchInfo: Result): Promise<void> => {
@@ -67,16 +106,16 @@ export const addMatch = async (matchInfo: Result): Promise<void> => {
     try {
         const matchesRef = collection(firestore, 'Matches');
         const date = new Date().toISOString();
-        let winnerId, loserId, winnerScore, loserScore;
+        let winner: Player, loser: Player, winnerScore: number, loserScore: number;
 
         if (playerAScore > playerBScore) {
-            winnerId = playerA.id;
-            loserId = playerB.id;
+            winner = playerA;
+            loser = playerB;
             winnerScore = playerAScore;
             loserScore = playerBScore;
         } else {
-            winnerId = playerB.id;
-            loserId = playerA.id;
+            winner = playerB;
+            loser = playerA;
             winnerScore = playerBScore;
             loserScore = playerAScore;
         }
@@ -84,23 +123,33 @@ export const addMatch = async (matchInfo: Result): Promise<void> => {
         await addDoc(matchesRef, {
             winnerScore,
             loserScore,
-            winnerId,
+            winnerId: winner.id,
+            loserId: loser.id,
             date,
-            loserId,
             office,
         });
 
-        // Update the winner's wins
-        const winnerRef = doc(firestore, 'Players', winnerId);
+        const newElos = calculateElo(winner.elo, loser.elo);
+
+        // Update the winner's wins and Elo
+        const winnerRef = doc(firestore, 'Players', winner.id);
         await updateDoc(winnerRef, {
             wins: increment(1),
+            elo: newElos.winnerElo,
         });
 
-        // Update the loser's losses
-        const loserRef = doc(firestore, 'Players', loserId);
+        // Update the loser's losses and Elo
+        const loserRef = doc(firestore, 'Players', loser.id);
         await updateDoc(loserRef, {
             losses: increment(1),
+            elo: newElos.loserElo,
         });
+
+        // Update division rankings for the player offices
+        await updateDivisionRankings(winner.office, loser.office);
+
+        // Update overall rankings for all players
+        await updateOverallRankings();
     } catch (error) {
         console.error('Error adding match: ', error);
     }
