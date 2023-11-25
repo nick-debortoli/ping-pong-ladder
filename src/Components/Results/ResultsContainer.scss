@@ -8,3 +8,9 @@
     padding: 2.5%;
     box-sizing: border-box;
 }
+
+@media (max-width: 780px) {
+    .results-container {
+        display: flex;
+    }
+}

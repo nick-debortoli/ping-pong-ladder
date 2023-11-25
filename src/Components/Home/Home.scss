@@ -1,7 +1,13 @@
 .home {
     display: grid;
-    grid-template-columns: 272px 1fr; 
-    grid-gap: 10px; 
-  }
-  
-  
+    grid-template-columns: 272px 1fr;
+    grid-gap: 10px;
+}
+
+@media (max-width: 780px) {
+    .home {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

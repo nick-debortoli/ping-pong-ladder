@@ -80,3 +80,9 @@
         }
     }
 }
+
+@media (max-width: 780px) {
+    .results {
+        display: none;
+    }
+}

@@ -6,15 +6,21 @@ interface NavItemProps {
     icon: ReactNode;
     section: string;
     hasIndicator: boolean;
+    onClick?: () => void;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ icon, section, hasIndicator }) => {
+const NavItem: React.FC<NavItemProps> = ({ icon, section, hasIndicator, onClick }) => {
     const { currentSection, changeSection } = useSectionContext();
+
+    const handleClick = () => {
+        changeSection(section);
+        onClick && onClick();
+    };
 
     const itemClass = `list-item ${currentSection === section ? 'focused-list-item' : ''}`;
 
     return (
-        <li className={itemClass} onClick={() => changeSection(section)}>
+        <li className={itemClass} onClick={handleClick}>
             {icon}
             {section}
             {hasIndicator && <div className="notification-indicator">1</div>}

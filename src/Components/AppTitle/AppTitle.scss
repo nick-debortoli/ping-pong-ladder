@@ -18,13 +18,13 @@
             left: 40px;
             opacity: 0.4;
         }
-    
+
         .pong-icon {
             height: 64px;
             position: relative;
             z-index: 10;
         }
-    
+
         .govini-text {
             height: 60px;
         }
@@ -49,6 +49,10 @@
             left: 8px;
         }
     }
+}
 
-   
+@media (max-width: 780px) {
+    .app-subtitle {
+        font-size: 1em;
+    }
 }

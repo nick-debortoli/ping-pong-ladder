@@ -40,3 +40,9 @@
         }
     }
 }
+
+@media (max-width: 780px) {
+    .submit-results {
+        background-color: $dark-background;
+    }
+}
