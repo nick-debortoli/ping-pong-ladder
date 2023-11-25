@@ -30,3 +30,14 @@
         top: calc(50% + 75px);
     }
 }
+
+@media (max-width: 780px) {
+    .modal {
+        width: 75%;
+    }
+
+    .modal-title {
+        top: -2em;
+        font-size: 2em;
+    }
+}

@@ -6,7 +6,11 @@ import NavItem from './NavItem';
 
 import { STANDINGS, RESULTS } from '../../AppConstants';
 
-const NavRail: React.FC = () => {
+interface NavRailProp {
+    handleClose?: () => void;
+}
+
+const NavRail: React.FC<NavRailProp> = ({ handleClose }) => {
     return (
         <nav className="side-nav">
             <ul>
@@ -14,11 +18,13 @@ const NavRail: React.FC = () => {
                     icon={<FormatListNumberedOutlinedIcon />}
                     section={STANDINGS}
                     hasIndicator={false}
+                    onClick={handleClose}
                 />
                 <NavItem
                     icon={<AccountTreeOutlinedIcon />}
                     section={RESULTS}
                     hasIndicator={false}
+                    onClick={handleClose}
                 />
                 {/* <NavItem icon={<Person4OutlinedIcon />} section={PLAYERS} hasIndicator={false} />  */}
             </ul>

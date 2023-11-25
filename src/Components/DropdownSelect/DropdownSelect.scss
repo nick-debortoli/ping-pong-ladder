@@ -1,21 +1,26 @@
 .select-container {
-  height: 45px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 85%;
+    height: 3rem; /* Use relative units */
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%; /* Make it full-width on mobile */
 
-  .dropdown-label {
-    margin-right: 10px;
-  }
-
-  .dropdown-select {
-    flex-grow: 1;
-    text-align: center;
-
-    option {
-      text-align: center;
+    .dropdown-label {
+        margin-right: 5px; /* Reduce margin for better spacing on mobile */
     }
-  }
+
+    .dropdown-select {
+        flex-grow: 1;
+        text-align: center;
+
+        option {
+            text-align: center;
+        }
+    }
+
+    @media (min-width: 768px) {
+        /* Add styles for screens larger than 768px if needed */
+        width: 85%; /* Reset width for larger screens if necessary */
+    }
 }
