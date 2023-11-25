@@ -1,0 +1,67 @@
+@import './../../Themes/variables';
+
+.settings-container {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+
+    .settings-button {
+        z-index: 100;
+        border-radius: 100%;
+        background: $dark-background;
+        border: 1px solid $sidebar-border;
+        cursor: pointer;
+        &:hover {
+            background: $app-background;
+        }
+    }
+}
+
+.feature-request {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+
+    .form-group {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+
+        label {
+            width: 120px;
+        }
+
+        input,
+        textarea {
+            width: calc(100% - 120px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        textarea {
+            font-size: 10px;
+        }
+    }
+
+    .form-actions {
+        width: 100%;
+        display: flex;
+        margin: 12px;
+        gap: 32px;
+        align-items: center;
+        justify-content: center;
+
+        .close-button {
+            background: $app-background;
+        }
+
+        .disabled {
+            background: gray;
+            color: darkgray;
+            pointer-events: none;
+        }
+    }
+}

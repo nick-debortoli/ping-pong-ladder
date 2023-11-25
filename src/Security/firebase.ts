@@ -7,6 +7,7 @@ import {
     signOut,
     UserCredential,
 } from 'firebase/auth';
+import { getFunctions, httpsCallable } from 'firebase/functions';
 
 export const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -19,6 +20,8 @@ export const firebaseConfig = {
 
 // -- Initialize user auth
 export const app = initializeApp(firebaseConfig);
+const functions = getFunctions(app);
+export const sendEmail = httpsCallable(functions, 'sendEmail');
 export const auth = getAuth(app); // Authentication
 
 export const signUp = async (email: string, password: string): Promise<void> => {
