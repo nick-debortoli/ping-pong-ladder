@@ -18,9 +18,13 @@
             text-align: center;
         }
     }
+}
 
-    @media (min-width: 768px) {
-        /* Add styles for screens larger than 768px if needed */
-        width: 85%; /* Reset width for larger screens if necessary */
+@media (max-width: 780px) {
+    .select-container {
+        .dropdown-label,
+        .dropdown-select {
+            font-size: 0.75em !important;
+        }
     }
 }

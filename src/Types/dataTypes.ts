@@ -8,6 +8,8 @@ export interface BasePlayer {
     office: string;
     overallRanking: number;
     divisionRanking: number;
+    country: string;
+    playStyle: 'RH' | 'LH';
 }
 
 export interface Player extends BasePlayer {

@@ -3,4 +3,10 @@
     margin: 8px;
     padding: 10px;
     font-size: 18px;
-  }
+}
+
+@media (max-width: 780px) {
+    .textbox {
+        font-size: 0.75em;
+    }
+}

@@ -5,11 +5,10 @@ import { useSectionContext } from '../../Contexts/SectionContext';
 interface NavItemProps {
     icon: ReactNode;
     section: string;
-    hasIndicator: boolean;
     onClick?: () => void;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ icon, section, hasIndicator, onClick }) => {
+const NavItem: React.FC<NavItemProps> = ({ icon, section, onClick }) => {
     const { currentSection, changeSection } = useSectionContext();
 
     const handleClick = () => {
@@ -23,7 +22,6 @@ const NavItem: React.FC<NavItemProps> = ({ icon, section, hasIndicator, onClick 
         <li className={itemClass} onClick={handleClick}>
             {icon}
             {section}
-            {hasIndicator && <div className="notification-indicator">1</div>}
         </li>
     );
 };

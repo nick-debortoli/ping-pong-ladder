@@ -17,6 +17,8 @@ interface FormData {
     firstName: string;
     lastName: string;
     office: string;
+    playStyle: 'LH' | 'RH';
+    country: string;
 }
 
 const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
@@ -24,14 +26,17 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
         email: '',
         firstName: '',
         lastName: '',
+        playStyle: 'RH',
+        country: '',
         office: 'PGH',
     });
 
     const [isEmailValid, setIsEmailValid] = useState<boolean>(false);
+    const [isValidInput, setIsValidInput] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const handleSignUp = async (formData: FormData): Promise<void> => {
-        const { email, firstName, lastName, office } = formData;
+        const { email, firstName, lastName, office, playStyle, country } = formData;
         if (!isEmailValid) {
             alert('Invalid email format - must use a Govini email address');
         } else if (firstName.trim() === '' || lastName.trim() === '') {
@@ -44,12 +49,14 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
                     email,
                     firstName,
                     lastName,
+                    office,
+                    playStyle,
+                    country,
                     elo: BASE_ELO,
                     wins: 0,
                     losses: 0,
-                    office,
                     overallRanking: 0,
-                    divisionRanking: 0
+                    divisionRanking: 0,
                 });
                 navigate('/home');
             } catch (error) {
@@ -72,6 +79,8 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
             ...prevState,
             [name]: value,
         }));
+        const isValid = Object.values(formData).every((value) => value !== '');
+        setIsValidInput(isValid);
     };
 
     const handleDropdownChange = (selectedOffice) => {
@@ -110,6 +119,13 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
                 onChange={handleInputChange}
                 placeholder="Last Name"
             />
+            <TextInput
+                type="text"
+                name="country"
+                value={formData.country}
+                onChange={handleInputChange}
+                placeholder="Birth Country"
+            />
             <DropdownSelect
                 id="office-select"
                 label="Select Govini Office:"
@@ -119,7 +135,19 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
                     { value: 'DC', label: 'DC' },
                 ]}
             />
-            <button className="signup-btn" onClick={() => handleSignUp(formData)}>
+            <DropdownSelect
+                id="play-style"
+                label="Select Style of Play:"
+                onChange={handleDropdownChange}
+                dropdownOptions={[
+                    { value: 'RH', label: 'Right Handed' },
+                    { value: 'LH', label: 'Left Handed' },
+                ]}
+            />
+            <button
+                className={`signup-btn ${isValidInput ? '' : 'disabled'}`}
+                onClick={() => handleSignUp(formData)}
+            >
                 Register
             </button>
             <div className="signup-link">

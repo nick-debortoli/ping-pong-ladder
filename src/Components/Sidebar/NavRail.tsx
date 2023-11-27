@@ -1,10 +1,10 @@
 import './NavRail.scss';
 import AccountTreeOutlinedIcon from '@mui/icons-material/AccountTreeOutlined';
 import FormatListNumberedOutlinedIcon from '@mui/icons-material/FormatListNumberedOutlined';
-// import Person4OutlinedIcon from '@mui/icons-material/Person4Outlined';
+import Person4OutlinedIcon from '@mui/icons-material/Person4Outlined';
 import NavItem from './NavItem';
 
-import { STANDINGS, RESULTS } from '../../AppConstants';
+import { STANDINGS, RESULTS, PLAYERS } from '../../AppConstants';
 
 interface NavRailProp {
     handleClose?: () => void;
@@ -17,16 +17,14 @@ const NavRail: React.FC<NavRailProp> = ({ handleClose }) => {
                 <NavItem
                     icon={<FormatListNumberedOutlinedIcon />}
                     section={STANDINGS}
-                    hasIndicator={false}
                     onClick={handleClose}
                 />
                 <NavItem
                     icon={<AccountTreeOutlinedIcon />}
                     section={RESULTS}
-                    hasIndicator={false}
                     onClick={handleClose}
                 />
-                {/* <NavItem icon={<Person4OutlinedIcon />} section={PLAYERS} hasIndicator={false} />  */}
+                <NavItem icon={<Person4OutlinedIcon />} section={PLAYERS} onClick={handleClose} />
             </ul>
         </nav>
     );
