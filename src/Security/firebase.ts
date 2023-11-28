@@ -7,9 +7,17 @@ import {
     signOut,
     UserCredential,
 } from 'firebase/auth';
-import { getFunctions, httpsCallable } from 'firebase/functions';
 
-export const firebaseConfig = {
+export const firebaseProdConfig = {
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY_PROD,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN_PROD,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID_PROD,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET_PROD,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGE_SENDER_ID_PROD,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID_PROD,
+};
+
+const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
     projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
@@ -20,9 +28,7 @@ export const firebaseConfig = {
 
 // -- Initialize user auth
 export const app = initializeApp(firebaseConfig);
-const functions = getFunctions(app);
-export const sendEmail = httpsCallable(functions, 'sendEmail');
-export const auth = getAuth(app); // Authentication
+export const auth = getAuth(app);
 
 export const signUp = async (email: string, password: string): Promise<void> => {
     try {
