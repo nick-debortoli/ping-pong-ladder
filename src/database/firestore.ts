@@ -116,6 +116,40 @@ function updateRecentMatchesArray(newMatchId, existingRecentMatches, maxMatches 
     return updatedMatches;
 }
 
+const updateHeadToHead = async (
+    playerId: string,
+    playerScore: number,
+    opponentId: string,
+    opponentScore: number,
+    isWinner: boolean,
+    matchDocRef: any,
+) => {
+    const headToHeadRef = doc(firestore, `Players/${playerId}/head2head`, opponentId);
+    const headToHeadSnapshot = await getDoc(headToHeadRef);
+    const headToHeadData = headToHeadSnapshot.data();
+    const existingMatches = headToHeadData ? headToHeadData.recentMatchIds : [];
+    const winsIncrement = isWinner ? 1 : 0;
+    const lossesIncrement = isWinner ? 0 : 1;
+
+    if (headToHeadSnapshot.exists()) {
+        await updateDoc(headToHeadRef, {
+            wins: increment(winsIncrement),
+            losses: increment(lossesIncrement),
+            pointsFor: increment(playerScore),
+            pointsAgainst: increment(opponentScore),
+            recentMatchIds: updateRecentMatchesArray(matchDocRef.id, existingMatches),
+        });
+    } else {
+        await setDoc(headToHeadRef, {
+            wins: winsIncrement,
+            losses: lossesIncrement,
+            pointsFor: playerScore,
+            pointsAgainst: opponentScore,
+            recentMatchIds: updateRecentMatchesArray(matchDocRef.id, existingMatches),
+        });
+    }
+};
+
 export const addMatch = async (matchInfo: Result): Promise<void> => {
     const { playerA, playerB, playerAScore, playerBScore, office } = matchInfo;
 
@@ -150,51 +184,8 @@ export const addMatch = async (matchInfo: Result): Promise<void> => {
         });
 
         // Update head-to-head stats for both players
-        const headToHeadWinnerRef = doc(firestore, `Players/${winner.id}/head2head`, loser.id);
-        const headToHeadLoserRef = doc(firestore, `Players/${loser.id}/head2head`, winner.id);
-
-        const headToHeadWinnerSnapshot = await getDoc(headToHeadWinnerRef);
-        const headToHeadWinnerData = headToHeadWinnerSnapshot.data();
-        const existingWinnerMatches = headToHeadWinnerData
-            ? headToHeadWinnerData.recentMatchIds
-            : [];
-        const headToHeadLoserSnapshot = await getDoc(headToHeadLoserRef);
-        const headToHeadLoserData = headToHeadLoserSnapshot.data();
-        const existingLoserMatches = headToHeadLoserData ? headToHeadLoserData.recentMatchIds : [];
-
-        if (headToHeadWinnerSnapshot.exists()) {
-            await updateDoc(headToHeadWinnerRef, {
-                wins: increment(1),
-                pointsFor: increment(winnerScore),
-                pointsAgainst: increment(loserScore),
-                recentMatchIds: updateRecentMatchesArray(matchDocRef.id, existingWinnerMatches),
-            });
-        } else {
-            await setDoc(headToHeadWinnerRef, {
-                wins: 1,
-                losses: 0,
-                pointsFor: winnerScore,
-                pointsAgainst: loserScore,
-                recentMatchIds: updateRecentMatchesArray(matchDocRef.id, existingWinnerMatches),
-            });
-        }
-
-        if (headToHeadLoserSnapshot.exists()) {
-            await updateDoc(headToHeadLoserRef, {
-                losses: increment(1),
-                pointsFor: increment(loserScore),
-                pointsAgainst: increment(winnerScore),
-                recentMatchIds: updateRecentMatchesArray(matchDocRef.id, existingLoserMatches),
-            });
-        } else {
-            await setDoc(headToHeadLoserRef, {
-                wins: 0,
-                losses: 1,
-                pointsFor: loserScore,
-                pointsAgainst: winnerScore,
-                recentMatchIds: updateRecentMatchesArray(matchDocRef.id, existingLoserMatches),
-            });
-        }
+        await updateHeadToHead(winner.id, winnerScore, loser.id, loserScore, true, matchDocRef);
+        await updateHeadToHead(loser.id, loserScore, winner.id, winnerScore, false, matchDocRef);
 
         const newElos = calculateElo(winner.elo, loser.elo);
 
