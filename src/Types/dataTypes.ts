@@ -17,7 +17,10 @@ export interface Player extends BasePlayer {
 }
 
 export interface Standing
-    extends Omit<Player, 'email' | 'office' | 'overallRanking' | 'divisionRanking'> {
+    extends Omit<
+        Player,
+        'email' | 'office' | 'overallRanking' | 'divisionRanking' | 'country' | 'playStyle'
+    > {
     rank: number;
 }
 
@@ -49,4 +52,9 @@ export interface BugSubmission {
     name: string;
     email: string;
     description: string;
+}
+
+export enum PlayerTabs {
+    BIOS = 'bios',
+    H2H = 'h2h',
 }

@@ -7,7 +7,8 @@ import { onSnapshot, collection } from 'firebase/firestore';
 interface PlayersContextProps {
     players: Array<Player>;
     loading: boolean;
-    getPlayerById: (id: string) => Player | undefined;
+    getPlayerById: (id: string) => Player | null;
+    getTopPlayer: () => Player;
 }
 
 const PlayersContext = createContext<PlayersContextProps | undefined>(undefined);
@@ -60,16 +61,27 @@ export const PlayersProvider: React.FC<PlayerProviderProps> = ({ children }) => 
         };
 
         fetchPlayers();
-
-        // No need to clean up, as this effect runs once after the initial render
     }, []);
 
-    const getPlayerById = (id: string) => {
-        return players.find((player) => player.id === id);
+    const getPlayerById = (id: string): Player | null => {
+        const playerById = players.find((player) => player.id === id);
+        if (playerById) {
+            return playerById;
+        }
+        return null;
+    };
+
+    const getTopPlayer = (): Player => {
+        const topPlayer = players.find((player) => player.overallRanking === 1);
+        if (topPlayer) {
+            return topPlayer;
+        }
+
+        return players[0];
     };
 
     return (
-        <PlayersContext.Provider value={{ players, loading, getPlayerById }}>
+        <PlayersContext.Provider value={{ players, loading, getPlayerById, getTopPlayer }}>
             {children}
         </PlayersContext.Provider>
     );
