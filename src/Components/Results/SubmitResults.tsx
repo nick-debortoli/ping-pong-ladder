@@ -2,7 +2,7 @@ import './SubmitResults.scss';
 import { useState } from 'react';
 import { usePlayers } from '../../Contexts/PlayersContext';
 import { Office, Player, Result } from '../../Types/dataTypes';
-import { addMatch } from '../../database/firestore';
+import { addMatch, checkRecentMatches } from '../../database/matches';
 
 interface SubmitResultsProps {
     handleReloadResults: (status: boolean) => void;
@@ -67,17 +67,24 @@ const SubmitResults: React.FC<SubmitResultsProps> = ({ handleReloadResults }) =>
 
         const isTie = resultsData.playerAScore === resultsData.playerBScore;
 
+        resultsData.playerAScore = Number(resultsData.playerAScore);
+        resultsData.playerBScore = Number(resultsData.playerBScore);
+
+        const results = resultsData;
+
+        setPlayersList(defaultPlayers);
+        setResultsData(defaultResultsData);
+        handleReloadResults(true);
+        setIsValidResult(false);
+
+        const isSubmitted = await checkRecentMatches(results);
+
         if (isTie) {
             alert('You can not submit a tie');
+        } else if (isSubmitted) {
+            alert('This match was recently submitted - check with your opponent!');
         } else {
-            resultsData.playerAScore = Number(resultsData.playerAScore);
-            resultsData.playerBScore = Number(resultsData.playerBScore);
-
             await addMatch(resultsData);
-            setPlayersList(defaultPlayers);
-            setResultsData(defaultResultsData);
-            handleReloadResults(true);
-            setIsValidResult(false);
         }
     };
 

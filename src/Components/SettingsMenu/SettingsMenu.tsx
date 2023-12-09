@@ -3,8 +3,7 @@ import BugReportIcon from '@mui/icons-material/BugReport';
 import { IconButton, Tooltip, ClickAwayListener } from '@mui/material';
 import './settingsMenu.scss';
 import Modal from '../Modal/Modal';
-import { addBug } from '../../database/firestore';
-
+import { addBug } from '../../database/bugs';
 
 const SettingsMenu = () => {
     const defaultFormData = {

@@ -1,8 +1,8 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
-import { getPlayers } from '../database/firestore';
 import { Player } from '../Types/dataTypes';
 import { firestore } from '../database/firestore';
 import { onSnapshot, collection } from 'firebase/firestore';
+import { getPlayers } from '../database/players';
 
 interface PlayersContextProps {
     players: Array<Player>;
