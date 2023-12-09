@@ -27,7 +27,7 @@ export const firebaseConfig = {
 };
 
 // -- Initialize user auth
-export const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseProdConfig);
 export const auth = getAuth(app);
 
 export const signUp = async (email: string, password: string): Promise<void> => {
