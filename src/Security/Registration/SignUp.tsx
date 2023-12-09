@@ -3,7 +3,7 @@ import { signUp } from '../firebase';
 import { useEffect, useState } from 'react';
 import './SignUp.scss';
 import { useNavigate } from 'react-router-dom';
-import { addPlayer } from '../../database/firestore';
+import { addPlayer } from '../../database/players';
 import { Error } from '../../Types/errorTypes';
 import TextInput from '../../Components/TextInput/TextInput';
 import DropdownSelect from '../../Components/DropdownSelect/DropdownSelect';
@@ -49,7 +49,7 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
                     losses: 0,
                     office,
                     overallRanking: 0,
-                    divisionRanking: 0
+                    divisionRanking: 0,
                 });
                 navigate('/home');
             } catch (error) {

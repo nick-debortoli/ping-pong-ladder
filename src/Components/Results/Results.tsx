@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getRecentMatches } from '../../database/firestore';
+import { getRecentMatches } from '../../database/matches';
 import './Results.scss';
 import { MatchInfo } from '../../Types/dataTypes';
 import { usePlayers } from '../../Contexts/PlayersContext';
@@ -40,8 +40,8 @@ const Results: React.FC<ResultsProps> = ({ reloadResults, handleReloadResults })
     return (
         <div className="results">
             <h3 className="results-title">Recent Matches</h3>
-            {recentMatches.map((match: MatchInfo) => (
-                <div className="recent-result">
+            {recentMatches.map((match: MatchInfo, index) => (
+                <div className="recent-result" key={`match-${index}`}>
                     <div className="player-info-container">
                         <div className="player-info">
                             <p className="player-name">{formatPlayerName(match.winnerId)}</p>

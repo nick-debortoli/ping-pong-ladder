@@ -17,7 +17,7 @@ export const firebaseProdConfig = {
     appId: import.meta.env.VITE_FIREBASE_APP_ID_PROD,
 };
 
-const firebaseConfig = {
+export const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
     projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
@@ -27,7 +27,7 @@ const firebaseConfig = {
 };
 
 // -- Initialize user auth
-export const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseProdConfig);
 export const auth = getAuth(app);
 
 export const signUp = async (email: string, password: string): Promise<void> => {
