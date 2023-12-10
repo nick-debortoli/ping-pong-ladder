@@ -1,6 +1,6 @@
-import PPIcon from '../../assets/ppIcon.svg';
-import GoviniText from '../../assets/govini-web-logo.png';
-import GoviniFlame from '../../assets/ghost-flame.svg';
+import PPIcon from '/assets/ppIcon.svg';
+import GoviniText from '/assets/govini-web-logo.png';
+import GoviniFlame from '/assets/ghost-flame.svg';
 import { useNavigate } from 'react-router-dom';
 import './AppTitle.scss';
 

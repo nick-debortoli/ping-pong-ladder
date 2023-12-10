@@ -1,0 +1,21 @@
+@import '../../Themes/variables';
+
+.player-bios {
+    position: absolute;
+    height: 95%;
+    width: 95%;
+    box-sizing: border-box;
+
+    .player-bio-tools {
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 24px;
+
+        .change-player-button {
+            border: 1px solid $sidebar-border;
+            border-radius: 0px;
+            color: white;
+        }
+    }
+}

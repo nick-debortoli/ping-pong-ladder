@@ -31,6 +31,8 @@
         select,
         input {
             margin-left: 16px;
+            color: white !important;
+            background: $dark-background !important;
         }
 
         .disabled {

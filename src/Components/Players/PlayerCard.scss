@@ -1,0 +1,201 @@
+@import '../../Themes/variables';
+
+.player-card {
+    position: relative;
+    border: 1px solid $sidebar-border;
+    border-radius: 4px;
+    padding: 1em 2em;
+    height: 70%;
+    display: flex;
+    gap: 1em;
+    justify-content: space-between;
+
+    .left-column {
+        display: flex;
+        flex-direction: column;
+
+        .country {
+            margin: auto 0;
+            img {
+                height: 3em;
+                width: 5em;
+                border: 1px solid $sidebar-border;
+            }
+        }
+        .name {
+            display: flex;
+            flex-direction: column;
+            height: 8em;
+            margin-bottom: 16px;
+            .first-name {
+                font-size: 2em;
+                margin-left: 4px;
+            }
+            .last-name {
+                font-size: 5em;
+                transform: translateY(-0.25em);
+                color: $govini-orange;
+            }
+        }
+
+        .rank {
+            &.no-country {
+                margin: auto 0 2em 0;
+            }
+            display: flex;
+            flex-direction: column;
+
+            .rank-container {
+                display: flex;
+                align-items: center;
+                gap: 1em;
+                height: 8em;
+
+                .vertical {
+                    writing-mode: vertical-lr;
+                    transform: rotate(-180deg);
+                    opacity: 0.95;
+                    font-weight: 100;
+                    letter-spacing: 0.5px;
+                }
+
+                .number {
+                    display: inline-block;
+                    font-family: 'Tourney', sans-serif;
+                    font-size: 8em;
+                    font-style: italic;
+                    font-weight: 900;
+                }
+
+                .division-number {
+                    opacity: 0.5;
+                }
+            }
+        }
+    }
+
+    .player-headshot {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: 100%;
+        display: flex;
+        align-items: center;
+
+        .default-icon {
+            height: 15em;
+            width: 15em;
+            opacity: 0.5;
+        }
+    }
+
+    .right-column {
+        display: flex;
+        align-items: center;
+        .stats {
+            display: flex;
+            flex-direction: row;
+            gap: 1em;
+            font-size: 1.25em;
+
+            .stat-labels,
+            .stat-values {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5em;
+            }
+
+            .stat-labels {
+                opacity: 0.5;
+            }
+        }
+    }
+}
+
+@media (max-height: 850px) {
+    .player-card {
+        .left-column {
+            .name {
+                height: 7em;
+                .first-name {
+                    font-size: 2.5em;
+                    margin-left: 4px;
+                }
+                .last-name {
+                    font-size: 3.5em;
+                    transform: translateY(-0.25em);
+                    color: $govini-orange;
+                }
+            }
+
+            .country {
+                img {
+                    height: 2em;
+                    width: 3.33em;
+                }
+            }
+
+            .rank {
+                .rank-container {
+                    height: 6em;
+
+                    .number {
+                        font-size: 6em;
+                    }
+                }
+            }
+        }
+
+        .right-column {
+            .stats {
+                gap: 0.75em;
+                font-size: 1em;
+
+                .stat-labels,
+                .stat-values {
+                    gap: 0.25em;
+                }
+            }
+        }
+    }
+}
+
+@media (max-height: 675px) {
+    .player-card {
+        .left-column {
+            .name {
+                height: 4em;
+                .first-name {
+                    font-size: 1.5em;
+                    margin-left: 4px;
+                }
+                .last-name {
+                    font-size: 2.5em;
+                    transform: translateY(-0.25em);
+                    color: $govini-orange;
+                }
+            }
+
+            .country {
+                img {
+                    height: 2em;
+                    width: 3.33em;
+                }
+            }
+
+            .rank {
+                .rank-container {
+                    height: 4em;
+                    .vertical {
+                        font-size: 0.75em;
+                    }
+
+                    .number {
+                        font-size: 4em;
+                    }
+                }
+            }
+        }
+    }
+}

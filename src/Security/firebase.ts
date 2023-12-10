@@ -8,7 +8,7 @@ import {
     UserCredential,
 } from 'firebase/auth';
 
-export const firebaseProdConfig = {
+const firebaseProdConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY_PROD,
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN_PROD,
     projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID_PROD,
@@ -17,7 +17,7 @@ export const firebaseProdConfig = {
     appId: import.meta.env.VITE_FIREBASE_APP_ID_PROD,
 };
 
-export const firebaseConfig = {
+const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
     projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
@@ -26,8 +26,14 @@ export const firebaseConfig = {
     appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
+let config = firebaseConfig;
+
+if (import.meta.env.VITE_ENVIRONMENT === 'prod') {
+    config = firebaseProdConfig;
+}
+
 // -- Initialize user auth
-export const app = initializeApp(firebaseProdConfig);
+export const app = initializeApp(config);
 export const auth = getAuth(app);
 
 export const signUp = async (email: string, password: string): Promise<void> => {

@@ -1,12 +1,14 @@
-@import "../../Themes/variables";
+@import '../../Themes/variables';
 
 .content-container {
-  background: $dark-background;
-  width: 95%;
-  height: calc(90% - 3em);
-  box-sizing: border-box;
-  margin: calc(7.5% + 3em) 0 2.5% 0;
-  position: relative;
-  border-radius: 8px;
-  border: 1px solid $sidebar-border;
+    background: $dark-background;
+    width: 95%;
+    height: calc(90% - 3em);
+    box-sizing: border-box;
+    margin: calc(7.5% + 3em) 0 2.5% 0;
+    position: relative;
+    border-radius: 8px;
+    border: 1px solid $sidebar-border;
+    min-height: 450px;
+    min-width: 550px;
 }

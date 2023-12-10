@@ -12,32 +12,16 @@
     gap: 8px;
     cursor: pointer;
     background-color: $dark-background;
-    transition: background-color 0.3s ease-in; 
+    transition: background-color 0.3s ease-in;
     letter-spacing: 1.2px;
 
-    &:hover, &.focused-list-item {
+    &:hover,
+    &.focused-list-item {
         background-color: $app-background;
     }
 
     &.focused-list-item {
         border-top: 1px solid $sidebar-border;
         border-bottom: 1px solid $sidebar-border;
-
-    }
-
-
-
-    .notification-indicator {
-        background: $govini-orange;
-        margin: 0 8px;
-        padding: 6px;
-        border-radius: 50%;
-        width: 16px;
-        height: 16px;
-        font-size: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
     }
 }
