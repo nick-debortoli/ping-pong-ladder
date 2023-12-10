@@ -10,6 +10,7 @@ export interface BasePlayer {
     divisionRanking: number;
     country: string;
     playStyle: 'RH' | 'LH';
+    turnedPro: number;
 }
 
 export interface Player extends BasePlayer {

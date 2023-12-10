@@ -20,7 +20,7 @@ const StandingsContainer: React.FC = () => {
 
             const sortedPlayers = filteredPlayers
                 .slice()
-              
+                .sort((playerA, playerB) => playerB.elo - playerA.elo);
 
             const standings: Standing[] = sortedPlayers.map((player, index) => ({
                 id: player.id,

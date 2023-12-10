@@ -44,6 +44,8 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
         } else {
             try {
                 const defaultPassowrd = import.meta.env.VITE_DEFAULT_PASSWORD;
+                const currentDate = new Date();
+                const currentYear = currentDate.getFullYear();
                 await signUp(email, defaultPassowrd);
                 await addPlayer({
                     email,
@@ -57,6 +59,7 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
                     losses: 0,
                     overallRanking: 0,
                     divisionRanking: 0,
+                    turnedPro: currentYear,
                 });
                 navigate('/home');
             } catch (error) {
