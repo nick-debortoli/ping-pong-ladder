@@ -6,6 +6,7 @@ const StandingsHeading: React.FC = () => {
             <span className="standings-title">Rank</span>
             <span className="standings-title">Player</span>
             <span className="standings-title">Elo</span>
+            <span className="standings-title">Win %</span>
             <span className="standings-title">W-L</span>
         </div>
     );

@@ -3,7 +3,7 @@ import { getRecentMatches } from '../../database/matches';
 import './Results.scss';
 import { MatchInfo } from '../../Types/dataTypes';
 import { usePlayers } from '../../Contexts/PlayersContext';
-import { formatDateToString } from '../../Utils/dateUtils';
+import { formatDateToString, formatDateToTime } from '../../Utils/dateUtils';
 
 interface ResultsProps {
     reloadResults: boolean;
@@ -56,6 +56,7 @@ const Results: React.FC<ResultsProps> = ({ reloadResults, handleReloadResults })
                     </div>
                     <div className="match-info">
                         <p>Date: {formatDateToString(match.date)}</p>
+                        <p>Time: {formatDateToTime(match.date)}</p>
                         <p>Location: {match.office}</p>
                     </div>
                 </div>

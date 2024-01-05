@@ -31,3 +31,11 @@ export const getFlag = async (player: Player): Promise<string | null> => {
         return null;
     }
 };
+
+export const calculateWinPercentage = (player: Player): number => {
+    const totalMatches = player.wins + player.losses;
+    if (totalMatches === 0) {
+        return 0;
+    }
+    return Math.round((player.wins / totalMatches) * 100);
+};
