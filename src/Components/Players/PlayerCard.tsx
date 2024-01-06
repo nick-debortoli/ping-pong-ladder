@@ -14,6 +14,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player }) => {
     useEffect(() => {
         getHeadshot(player)
             .then((headshotUrl) => {
+                headshotUrl = null;
                 setHeadshot(headshotUrl);
             })
             .catch((error) => {

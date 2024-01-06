@@ -20,7 +20,13 @@ export interface Player extends BasePlayer {
 export interface Standing
     extends Omit<
         Player,
-        'email' | 'office' | 'overallRanking' | 'divisionRanking' | 'country' | 'playStyle'
+        | 'email'
+        | 'office'
+        | 'overallRanking'
+        | 'divisionRanking'
+        | 'country'
+        | 'playStyle'
+        | 'turnedPro'
     > {
     rank: number;
 }

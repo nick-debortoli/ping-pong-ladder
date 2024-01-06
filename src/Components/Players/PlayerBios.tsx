@@ -25,7 +25,7 @@ const PlayerBios: React.FC = () => {
     const playerNames = sortedPlayers.map((player) => `${player.firstName} ${player.lastName}`);
     const [focusedPlayer, setFocusedPlayer] = useState<Player>(getTopPlayer());
 
-    const handleSearch = (event, newPlayer) => {
+    const handleSearch = (_, newPlayer) => {
         let nextPlayer: Player = getTopPlayer();
         if (newPlayer) {
             const [firstName, lastName] = newPlayer.split(' ');
