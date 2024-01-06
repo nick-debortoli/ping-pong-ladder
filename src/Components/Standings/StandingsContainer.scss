@@ -8,9 +8,10 @@
     align-items: center;
     margin: 2.5%;
     overflow: scroll;
+    width: 95%;
 }
 
-@media (max-width: 780px) {
+@media (min-width: 780px) {
     .standings-container {
         overflow-x: hidden;
     }

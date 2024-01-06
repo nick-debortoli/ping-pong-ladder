@@ -5,6 +5,7 @@ import { Office, Standing } from '../../Types/dataTypes';
 import './StandingsContainer.scss';
 import { usePlayers } from '../../Contexts/PlayersContext';
 import OfficeTabs from './OfficeTabs';
+import { calculateWinPercentage } from '../../Utils/playerUtils';
 
 const StandingsContainer: React.FC = () => {
     const [standingsData, setStandingsData] = useState<Standing[] | null>(null);
@@ -22,15 +23,19 @@ const StandingsContainer: React.FC = () => {
                 .slice()
                 .sort((playerA, playerB) => playerB.elo - playerA.elo);
 
-            const standings: Standing[] = sortedPlayers.map((player, index) => ({
-                id: player.id,
-                firstName: player.firstName,
-                lastName: player.lastName,
-                wins: player.wins,
-                losses: player.losses,
-                elo: player.elo,
-                rank: index + 1,
-            }));
+            const standings: Standing[] = sortedPlayers
+                .filter((player) => player.wins !== 0 || player.losses !== 0)
+                .map((player, index) => ({
+                    id: player.id,
+                    firstName: player.firstName,
+                    lastName: player.lastName,
+                    wins: player.wins,
+                    losses: player.losses,
+                    elo: player.elo,
+                    turnedPro: player.turnedPro,
+                    rank: index + 1,
+                    winningPercentage: calculateWinPercentage(player),
+                }));
 
             setStandingsData(standings);
         };

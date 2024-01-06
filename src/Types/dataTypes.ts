@@ -29,7 +29,14 @@ export interface Standing
         | 'turnedPro'
     > {
     rank: number;
+    winningPercentage: number;
 }
+
+export interface FormData
+    extends Omit<
+        Player,
+        'elo' | 'wins' | 'losses' | 'overallRanking' | 'divisionRanking' | 'id' | 'turnedPro'
+    > {}
 
 export enum Office {
     PGH = 'PGH',

@@ -7,18 +7,11 @@ import { addPlayer } from '../../database/players';
 import { Error } from '../../Types/errorTypes';
 import TextInput from '../../Components/TextInput/TextInput';
 import DropdownSelect from '../../Components/DropdownSelect/DropdownSelect';
+import { FormData } from '../../Types/dataTypes';
+import { trimFormInput } from '../../Utils/stringUtils';
 
 interface SignUpProps {
     handleChange: (type: string) => void;
-}
-
-interface FormData {
-    email: string;
-    firstName: string;
-    lastName: string;
-    office: string;
-    playStyle: 'LH' | 'RH';
-    country: string;
 }
 
 const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
@@ -36,13 +29,20 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
     const navigate = useNavigate();
 
     const handleSignUp = async (formData: FormData): Promise<void> => {
-        const { email, firstName, lastName, office, playStyle, country } = formData;
+        const trimmedInput = trimFormInput(formData);
+        const { email, firstName, lastName, office, playStyle, country } = trimmedInput;
         if (!isEmailValid) {
             alert('Invalid email format - must use a Govini email address');
         } else if (firstName.trim() === '' || lastName.trim() === '') {
             alert('Please enter your full name');
         } else {
             try {
+                const signupBtn = document.getElementById('signup-btn') as HTMLButtonElement;
+
+                if (signupBtn) {
+                    signupBtn.className = 'signup-btn disabled';
+                }
+
                 const defaultPassowrd = import.meta.env.VITE_DEFAULT_PASSWORD;
                 const currentDate = new Date();
                 const currentYear = currentDate.getFullYear();
@@ -148,6 +148,7 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
                 ]}
             />
             <button
+                id="signup-btn"
                 className={`signup-btn ${isValidInput ? '' : 'disabled'}`}
                 onClick={() => handleSignUp(formData)}
             >
