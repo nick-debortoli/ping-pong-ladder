@@ -105,9 +105,14 @@ export interface MatchInfo {
     date: string;
 }
 
+export type BracketPlayer = {
+    seed: number | null;
+    playerId: string;
+};
+
 export interface BracketMatch {
-    player1: { seed: number | null; playerId: string } | 'Bye' | null;
-    player2: { seed: number | null; playerId: string } | 'Bye' | null;
+    player1: BracketPlayer | 'Bye' | null;
+    player2: BracketPlayer | 'Bye' | null;
 }
 
 export interface BugSubmission {

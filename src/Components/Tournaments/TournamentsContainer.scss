@@ -8,17 +8,12 @@
     margin: 2.5%;
     overflow: scroll;
     width: 95%;
+    padding: 2.5%;
 
     .tournament-top-bar {
         display: flex;
         height: 35px;
         align-items: center;
         justify-content: space-between;
-    }
-}
-
-@media (min-width: 780px) {
-    .tournaments-container {
-        overflow-x: hidden;
     }
 }

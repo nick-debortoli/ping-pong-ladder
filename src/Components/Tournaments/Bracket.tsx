@@ -4,6 +4,7 @@ import { usePlayers } from '../../Contexts/PlayersContext';
 import { generateTournamentRounds } from '../../Utils/tournamentUtils';
 import { updateTournamentRoundsByName } from '../../database/tournaments';
 import './Bracket.scss';
+import Match from './Match';
 
 interface BracketProps {
     tournament: Tournament;
@@ -34,14 +35,12 @@ const Bracket: React.FC<BracketProps> = ({ tournament, activeOffice }) => {
 
     return (
         <div className="tournament">
-            {sortedRounds.map(([roundName, matches]) => {
+            {sortedRounds.map(([_, matches]) => {
                 const typedMatches = matches as BracketMatch[];
                 return (
                     <div className="round">
                         {typedMatches.map((match, index) => (
-                            <div className="match" key={index}>
-                                {roundName}
-                            </div>
+                            <Match match={match} key={index} />
                         ))}
                     </div>
                 );
