@@ -79,10 +79,38 @@ const SubmitResults: React.FC<SubmitResultsProps> = ({ handleReloadResults }) =>
 
         const isSubmitted = await checkRecentMatches(results);
 
+        const isWithinTwo = Math.abs(resultsData.playerAScore - resultsData.playerBScore) === 2;
+        const areBothOver21 = resultsData.playerAScore >= 21 && resultsData.playerBScore >= 21;
+
         if (isTie) {
             alert('You can not submit a tie');
         } else if (isSubmitted) {
             alert('This match was recently submitted - check with your opponent!');
+        } else if (
+            (resultsData.playerAScore === 21 ||
+                resultsData.playerAScore === 11 ||
+                resultsData.playerBScore === 21 ||
+                resultsData.playerBScore === 11) &&
+            !areBothOver21
+        ) {
+            await addMatch(resultsData);
+        } else if (Math.max(resultsData.playerAScore, resultsData.playerBScore) < 21) {
+            const confirmation = window.confirm(
+                'Are you sure? You submitted a score less than 21.',
+            );
+            if (confirmation) {
+                await addMatch(resultsData);
+            }
+        } else if (!isWithinTwo) {
+            const confirmation = window.confirm('Are you sure? The games have to be won by two.');
+            if (confirmation) {
+                await addMatch(resultsData);
+            }
+        } else if (resultsData.playerAScore > 30 || resultsData.playerBScore > 30) {
+            const confirmation = window.confirm('Are you sure? That is a high score.');
+            if (confirmation) {
+                await addMatch(resultsData);
+            }
         } else {
             await addMatch(resultsData);
         }

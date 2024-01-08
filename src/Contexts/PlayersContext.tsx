@@ -81,7 +81,14 @@ export const PlayersProvider: React.FC<PlayerProviderProps> = ({ children }) => 
     };
 
     return (
-        <PlayersContext.Provider value={{ players, loading, getPlayerById, getTopPlayer }}>
+        <PlayersContext.Provider
+            value={{
+                players,
+                loading,
+                getPlayerById,
+                getTopPlayer,
+            }}
+        >
             {children}
         </PlayersContext.Provider>
     );

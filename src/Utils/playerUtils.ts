@@ -39,3 +39,15 @@ export const calculateWinPercentage = (player: Player): number => {
     }
     return Math.round((player.wins / totalMatches) * 100);
 };
+
+export const isAdmin = (uid: string | undefined): boolean => {
+    if (!uid) {
+        return false;
+    }
+
+    if (import.meta.env.VITE_ENVIRONMENT === 'prod') {
+        return uid === import.meta.env.VITE_ADMIN_UID_PROD;
+    } else {
+        return uid === import.meta.env.VITE_ADMIN_UID;
+    }
+};
