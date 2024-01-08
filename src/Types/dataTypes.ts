@@ -106,8 +106,8 @@ export interface MatchInfo {
 }
 
 export interface BracketMatch {
-    player1: { seed: number; player: Player } | null;
-    player2: { seed: number; player: Player } | null;
+    player1: { seed: number | null; playerId: string } | 'Bye' | null;
+    player2: { seed: number | null; playerId: string } | 'Bye' | null;
 }
 
 export interface BugSubmission {
@@ -134,6 +134,10 @@ enum TournamentNames {
     PghOpen = 'PGH Open',
 }
 
+type Round = {
+    [round: string]: BracketMatch[];
+};
+
 export interface Tournament {
     name: TournamentNames;
     isActive: boolean;
@@ -142,5 +146,7 @@ export interface Tournament {
     endDate: string;
     topSeedPercentage: number;
     seeds: { [Office.DC]: string[]; [Office.PGH]: string[] };
-    results: MatchInfo[];
+    rounds: { [Office.DC]: Round; [Office.PGH]: Round };
 }
+
+export type TournamentHistory = Record<number, Tournament[]>;

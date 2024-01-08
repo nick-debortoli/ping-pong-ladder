@@ -1,6 +1,6 @@
 import { firestore } from './firestore';
 import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
-import { Tournament } from '../Types/dataTypes';
+import { BracketMatch, Office, Tournament } from '../Types/dataTypes';
 
 export const getTournaments = async (): Promise<Array<Tournament> | null> => {
     try {
@@ -79,5 +79,31 @@ export const updateTournamentInfo = async (tournament: Tournament): Promise<void
     } catch (error) {
         console.error('Error updating tournament information: ', error);
         throw error; // You can choose to re-throw the error or handle it as needed.
+    }
+};
+
+export const updateTournamentRoundsByName = async (
+    updatedRoundsObject: { [key: string]: BracketMatch[] },
+    tournamentName: string,
+    activeOffice: Office,
+): Promise<void> => {
+    try {
+        const tournamentsRef = collection(firestore, 'Tournaments');
+        const querySnapshot = await getDocs(tournamentsRef);
+
+        const tournamentDoc = querySnapshot.docs.find((doc) => doc.data().name === tournamentName);
+        if (tournamentDoc) {
+            const tournamentDocRef = doc(firestore, 'Tournaments', tournamentDoc.id);
+            const roundsKey = `rounds.${activeOffice}`; // Dynamically create the key for updating
+
+            await updateDoc(tournamentDocRef, {
+                [roundsKey]: updatedRoundsObject,
+            });
+        } else {
+            console.error('Tournament not found with the given name: ', tournamentName);
+        }
+    } catch (error) {
+        console.error('Error updating tournament rounds: ', error);
+        throw error;
     }
 };

@@ -1,0 +1,17 @@
+@import '../../Themes/variables';
+
+.tournament {
+    display: flex;
+
+    .round {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .match {
+        border: 1px solid $sidebar-border;
+        padding: 10px;
+        margin: 5px;
+    }
+}
