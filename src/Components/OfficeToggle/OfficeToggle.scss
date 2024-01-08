@@ -1,0 +1,33 @@
+@import '../../Themes/variables';
+
+.office-toggle {
+    display: flex;
+
+    .toggle-btn {
+        text-align: center;
+        background: $dark-background;
+        padding: 4px 12px;
+        width: 20px;
+        cursor: pointer;
+
+        &:hover {
+            mix-blend-mode: screen;
+        }
+
+        &.active-toggle {
+            background-color: $govini-orange;
+        }
+
+        &.pgh {
+            border-radius: 6px 0 0 6px;
+        }
+
+        &.dc {
+            border-radius: 0 6px 6px 0;
+        }
+
+        &.bordered {
+            border: 1px solid $sidebar-border;
+        }
+    }
+}

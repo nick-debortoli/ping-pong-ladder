@@ -1,0 +1,31 @@
+.seeds {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 275px;
+
+    .seeds-topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .seed-buttons {
+        display: flex;
+        gap: 32px;
+    }
+
+    .player-seeds {
+        margin: 5px;
+        column-count: 2;
+        column-gap: 5px;
+        break-inside: avoid;
+        margin-top: -20px;
+
+        .player-seed {
+            display: flex;
+            gap: 12px;
+        }
+    }
+}

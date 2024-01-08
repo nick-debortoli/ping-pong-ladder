@@ -1,7 +1,7 @@
 {
-  "name": "ping",
+  "name": "ping-pong-ladder",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.4.1",
   "type": "module",
   "scripts": {
     "start": "vite",
@@ -17,9 +17,12 @@
     "@mui/material": "^5.14.11",
     "@types/firebase": "^3.2.1",
     "add": "^2.0.6",
+    "d3": "^7.8.5",
     "firebase": "^10.6.0",
+    "firebase-admin": "^12.0.0",
     "firebase-tools": "^12.6.2",
     "react": "^18.2.0",
+    "react-datepicker": "^4.25.0",
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.1.1",
     "react-router-dom": "^6.16.0",

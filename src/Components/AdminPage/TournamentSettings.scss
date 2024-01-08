@@ -1,0 +1,49 @@
+@import '../../Themes/variables';
+
+.tournament-container {
+    background: $light-background;
+    border-radius: 4px;
+    margin: 8px 0;
+    padding: 8px 16px;
+
+    .tournament-forms {
+        display: flex;
+        gap: 16px;
+
+        .admin-tournament-form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            gap: 32px;
+            width: 100%;
+            flex: 2;
+
+            .form-group {
+                .tournament-start {
+                    margin-right: 30px;
+                }
+                .tournament-end {
+                    margin-right: 38px;
+                }
+
+                .seed-pct {
+                    margin-right: 12px;
+                }
+
+                .tournament-seeds-lock {
+                    margin-right: 64px;
+                }
+            }
+
+            h5 {
+                margin-bottom: -10px;
+            }
+        }
+    }
+
+    .active-switch {
+        position: relative;
+        margin-left: 620px;
+    }
+}

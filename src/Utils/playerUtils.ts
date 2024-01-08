@@ -31,3 +31,23 @@ export const getFlag = async (player: Player): Promise<string | null> => {
         return null;
     }
 };
+
+export const calculateWinPercentage = (player: Player): number => {
+    const totalMatches = player.wins + player.losses;
+    if (totalMatches === 0) {
+        return 0;
+    }
+    return Math.round((player.wins / totalMatches) * 100);
+};
+
+export const isAdmin = (uid: string | undefined): boolean => {
+    if (!uid) {
+        return false;
+    }
+
+    if (import.meta.env.VITE_ENVIRONMENT === 'prod') {
+        return uid === import.meta.env.VITE_ADMIN_UID_PROD;
+    } else {
+        return uid === import.meta.env.VITE_ADMIN_UID;
+    }
+};

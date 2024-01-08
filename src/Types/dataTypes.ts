@@ -1,3 +1,47 @@
+interface HeadToHead {
+    losses: number;
+    wins: number;
+    pointsFor: number;
+    pointsAgainst: number;
+    recentMatchIds: string[];
+}
+
+interface PlayerBio {
+    firstName: string;
+    lastName: string;
+    country: string;
+    playStyle: 'RH' | 'LH';
+    turnedPro: number;
+    office: string;
+    email: string;
+}
+
+interface PlayerStats {
+    elo: number;
+    wins: number;
+    losses: number;
+}
+
+type BestFinish = {
+    round: string;
+    year: number;
+};
+
+interface TournamentStats {
+    bestFinish: BestFinish;
+    wins: number;
+    losses: number;
+}
+
+export interface NewPlayer extends PlayerStats {
+    seasonStats: PlayerStats;
+    overallRanking: number;
+    divisionRanking: number;
+    bio: PlayerBio;
+    head2head: Record<string, HeadToHead>[];
+    tournamentStats: Record<TournamentNames, TournamentStats>;
+}
+
 export interface BasePlayer {
     firstName: string;
     lastName: string;
@@ -20,10 +64,23 @@ export interface Player extends BasePlayer {
 export interface Standing
     extends Omit<
         Player,
-        'email' | 'office' | 'overallRanking' | 'divisionRanking' | 'country' | 'playStyle'
+        | 'email'
+        | 'office'
+        | 'overallRanking'
+        | 'divisionRanking'
+        | 'country'
+        | 'playStyle'
+        | 'turnedPro'
     > {
     rank: number;
+    winningPercentage: number;
 }
+
+export interface FormData
+    extends Omit<
+        Player,
+        'elo' | 'wins' | 'losses' | 'overallRanking' | 'divisionRanking' | 'id' | 'turnedPro'
+    > {}
 
 export enum Office {
     PGH = 'PGH',
@@ -48,6 +105,16 @@ export interface MatchInfo {
     date: string;
 }
 
+export type BracketPlayer = {
+    seed: number | null;
+    playerId: string;
+};
+
+export interface BracketMatch {
+    player1: BracketPlayer | 'Bye' | null;
+    player2: BracketPlayer | 'Bye' | null;
+}
+
 export interface BugSubmission {
     type: string;
     name: string;
@@ -59,3 +126,32 @@ export enum PlayerTabs {
     BIOS = 'bios',
     H2H = 'h2h',
 }
+
+export interface Season {
+    seasonStartDate: string;
+    seasonEndDate: string;
+}
+
+enum TournamentNames {
+    ArkOpen = 'Ark Open',
+    DCOpen = 'DC Open',
+    Govimbledon = 'Govimbledon',
+    PghOpen = 'PGH Open',
+}
+
+type Round = {
+    [round: string]: BracketMatch[];
+};
+
+export interface Tournament {
+    name: TournamentNames;
+    isActive: boolean;
+    seedsLock: string;
+    startDate: string;
+    endDate: string;
+    topSeedPercentage: number;
+    seeds: { [Office.DC]: string[]; [Office.PGH]: string[] };
+    rounds: { [Office.DC]: Round; [Office.PGH]: Round };
+}
+
+export type TournamentHistory = Record<number, Tournament[]>;

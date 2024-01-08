@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Player } from '../../Types/dataTypes';
 import './PlayerCard.scss';
-import { getFlag, getHeadshot } from '../../Utils/playerUtils';
+import { calculateWinPercentage, getFlag, getHeadshot } from '../../Utils/playerUtils';
 import { Person } from '@mui/icons-material';
 
 interface PlayerCardProps {
@@ -14,6 +14,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player }) => {
     useEffect(() => {
         getHeadshot(player)
             .then((headshotUrl) => {
+                headshotUrl = null;
                 setHeadshot(headshotUrl);
             })
             .catch((error) => {
@@ -72,11 +73,13 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player }) => {
                         <span>Division: </span>
                         <span>Turned Pro: </span>
                         <span>Play Style: </span>
+                        <span>Win Pct: </span>
                     </div>
                     <div className="stat-values">
                         <span>{player.office}</span>
                         <span>{player.turnedPro}</span>
                         <span>{player.playStyle === 'RH' ? 'Right' : 'Left'}</span>
+                        <span>{calculateWinPercentage(player)}%</span>
                     </div>
                 </div>
             </div>
