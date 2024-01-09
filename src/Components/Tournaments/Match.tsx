@@ -1,12 +1,14 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { usePlayers } from '../../Contexts/PlayersContext';
-import { BracketMatch, BracketPlayer, Player } from '../../Types/dataTypes';
+import { BracketMatch, BracketPlayer, Office, Player, Tournament } from '../../Types/dataTypes';
 import { getFlag } from '../../Utils/playerUtils';
 
 interface MatchProps {
     match: BracketMatch;
+    tournament: Tournament;
+    activeOffice: Office;
 }
-const Match: React.FC<MatchProps> = ({ match }) => {
+const Match: React.FC<MatchProps> = ({ match, tournament, activeOffice }) => {
     const { getPlayerById } = usePlayers();
 
     const getPlayerInfo = async (player: BracketPlayer | 'Bye' | null) => {
@@ -16,10 +18,16 @@ const Match: React.FC<MatchProps> = ({ match }) => {
 
         const playerInfo: Player | null = getPlayerById(player.playerId);
 
-        if (!playerInfo) return null;
+        if (!playerInfo || !player.seed) return null;
 
         const flag = await getFlag(playerInfo);
         const { firstName, lastName } = playerInfo;
+
+        const showSeed =
+            player.seed <=
+            Math.floor(
+                (tournament.seeds[activeOffice].length * tournament.topSeedPercentage) / 100,
+            );
 
         return (
             <>
@@ -27,7 +35,7 @@ const Match: React.FC<MatchProps> = ({ match }) => {
                     <img src={flag} alt={`${playerInfo.country} flag`} className="player-flag" />
                 )}
                 {`${firstName[0]}. ${lastName}`}{' '}
-                <span className="player-seed">({player.seed})</span>
+                {showSeed && <span className="player-seed">({player.seed})</span>}
             </>
         );
     };

@@ -1,4 +1,4 @@
-import { BracketMatch } from '../Types/dataTypes';
+import { BracketMatch, Round, TournamentNameToImage, TournamentNames } from '../Types/dataTypes';
 
 const generateSeeds = (order: number): (number | null)[] => {
     let adjustedOrder = 1;
@@ -17,7 +17,7 @@ const generateSeeds = (order: number): (number | null)[] => {
     return fillBracket(1, adjustedOrder);
 };
 
-export const generateTournamentMatchups = (playerIds: string[]): BracketMatch[] => {
+export const generateTournamentMatchups = (playerIds: string[]): [BracketMatch[], number] => {
     const seeds = generateSeeds(playerIds.length);
 
     const totalSlots = seeds.length;
@@ -28,6 +28,7 @@ export const generateTournamentMatchups = (playerIds: string[]): BracketMatch[] 
         extendedPlayers.push(null);
     }
 
+    let matchNumber = 1;
     // Create matchups
     for (let i = 0; i < seeds.length / 2; i++) {
         const seed1 = seeds[i];
@@ -39,32 +40,81 @@ export const generateTournamentMatchups = (playerIds: string[]): BracketMatch[] 
         matchups.push({
             player1: player1 ? { seed: seed1, playerId: player1 } : 'Bye',
             player2: player2 ? { seed: seed2, playerId: player2 } : 'Bye',
+            matchId: matchNumber,
         });
+
+        matchNumber++;
 
         if (matchups.length - 1 === playerIds.length / 2) {
             break;
         }
     }
-    return matchups;
+    return [matchups, matchNumber];
 };
 
-export const generateTournamentRounds = (
-    playerIds: string[],
-): { [key: string]: BracketMatch[] } => {
-    const matchups = generateTournamentMatchups(playerIds);
+export const generateTournamentRounds = (playerIds: string[]): Round => {
+    const [matchups, startingMatchNumber] = generateTournamentMatchups(playerIds);
     const rounds: { [key: string]: BracketMatch[] } = {};
     rounds['round1'] = matchups;
 
     const numberOfRounds = Math.ceil(Math.log2(playerIds.length)) - 1;
 
+    let matchNumber = startingMatchNumber;
     for (let roundNumber = 1; roundNumber <= numberOfRounds; roundNumber++) {
         const roundKey = `round${roundNumber + 1}`;
         const emptyRound: BracketMatch[] = Array(matchups.length / 2 ** roundNumber)
             .fill(null)
-            .map(() => ({ player1: null, player2: null }));
+            .map(() => ({ matchId: matchNumber++, player1: null, player2: null }));
 
         rounds[roundKey] = emptyRound;
     }
 
     return rounds;
+};
+
+export const getTournamentLogo = async (name: TournamentNames): Promise<string | null> => {
+    const svgName = TournamentNameToImage[name];
+    const logoFilename = `/assets/tournaments/${svgName}.svg`;
+
+    try {
+        const response = await fetch(logoFilename);
+
+        if (response.status === 200) {
+            return logoFilename;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        return null;
+    }
+};
+
+export const getRoundName = (roundInput: string, totalRounds: number): string => {
+    if (totalRounds < 1) {
+        throw new Error('Total rounds must be at least 1.');
+    }
+
+    const match = roundInput.match(/^round(\d+)$/i);
+    if (!match) {
+        throw new Error(
+            "Invalid round input format. Expected format: 'roundX' where X is a number.",
+        );
+    }
+
+    const roundNumber = parseInt(match[1], 10);
+    if (isNaN(roundNumber) || roundNumber < 1 || roundNumber > totalRounds) {
+        throw new Error(
+            'Round number must be a valid integer between 1 and the total number of rounds.',
+        );
+    }
+
+    if (roundNumber === totalRounds) {
+        return 'Finals';
+    } else if (roundNumber === totalRounds - 1) {
+        return 'Semifinals';
+    } else if (totalRounds >= 4 && roundNumber === totalRounds - 2) {
+        return 'Quarterfinals';
+    } else {
+        return `Round ${roundNumber}`;
+    }
 };

@@ -86,10 +86,17 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
         setIsValidInput(isValid);
     };
 
-    const handleDropdownChange = (selectedOffice) => {
+    const handleOfficeChange = (selectedOffice) => {
         setFormData((prevState) => ({
             ...prevState,
             office: selectedOffice,
+        }));
+    };
+
+    const handlePlayStyleChange = (playStyle) => {
+        setFormData((prevState) => ({
+            ...prevState,
+            playStyle,
         }));
     };
 
@@ -132,7 +139,7 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
             <DropdownSelect
                 id="office-select"
                 label="Select Govini Office:"
-                onChange={handleDropdownChange}
+                onChange={handleOfficeChange}
                 dropdownOptions={[
                     { value: 'PGH', label: 'PGH' },
                     { value: 'DC', label: 'DC' },
@@ -141,7 +148,7 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
             <DropdownSelect
                 id="play-style"
                 label="Select Style of Play:"
-                onChange={handleDropdownChange}
+                onChange={handlePlayStyleChange}
                 dropdownOptions={[
                     { value: 'RH', label: 'Right Handed' },
                     { value: 'LH', label: 'Left Handed' },

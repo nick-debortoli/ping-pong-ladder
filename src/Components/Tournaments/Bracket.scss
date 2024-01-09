@@ -3,13 +3,28 @@
 .tournament {
     display: flex;
     justify-content: space-around;
+    position: absolute;
+    top: 10vmin;
+    transform: translateX(15vmin);
+    width: auto;
+    height: auto;
+    padding-bottom: 20vmin;
+    margin: 2.5%;
 
     .round {
         display: flex;
         flex-direction: column;
         justify-content: space-around;
+        align-items: center;
         border-left: 1px solid $sidebar-border;
-        padding: 0 5%;
+        padding: 40px 5% 0 5%;
+
+        .round-name {
+            position: absolute;
+            top: 0;
+            width: auto;
+            white-space: nowrap;
+        }
     }
 
     .match {

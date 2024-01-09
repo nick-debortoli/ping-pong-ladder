@@ -1,6 +1,6 @@
 import { firestore } from './firestore';
-import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
-import { BracketMatch, Office, Tournament } from '../Types/dataTypes';
+import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
+import { BracketMatch, Office, Round, Tournament, TournamentNames } from '../Types/dataTypes';
 
 export const getTournaments = async (): Promise<Array<Tournament> | null> => {
     try {
@@ -104,6 +104,36 @@ export const updateTournamentRoundsByName = async (
         }
     } catch (error) {
         console.error('Error updating tournament rounds: ', error);
+        throw error;
+    }
+};
+
+export const getTournamentRounds = async (
+    tournamentName: TournamentNames,
+    activeOffice: Office,
+): Promise<Round | null> => {
+    try {
+        const tournamentsRef = collection(firestore, 'Tournaments');
+        const querySnapshot = await getDocs(tournamentsRef);
+
+        const tournamentDoc = querySnapshot.docs.find((doc) => doc.data().name === tournamentName);
+        if (tournamentDoc) {
+            const tournamentDocRef = doc(firestore, 'Tournaments', tournamentDoc.id);
+            const tournamentData = await getDoc(tournamentDocRef);
+
+            if (tournamentData.exists()) {
+                const rounds = tournamentData.data()['rounds'][activeOffice];
+                return rounds || null;
+            } else {
+                console.error('Tournament data not found for the document: ', tournamentDoc.id);
+                return null; // Handle case where tournament data doesn't exist
+            }
+        } else {
+            console.error('Tournament not found with the given name: ', tournamentName);
+            return null; // Handle case where tournament document is not found
+        }
+    } catch (error) {
+        console.error('Error fetching tournament rounds: ', error);
         throw error;
     }
 };

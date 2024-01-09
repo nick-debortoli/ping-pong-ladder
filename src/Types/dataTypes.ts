@@ -24,7 +24,7 @@ interface PlayerStats {
 
 type BestFinish = {
     round: string;
-    year: number;
+    years: number[];
 };
 
 interface TournamentStats {
@@ -33,13 +33,19 @@ interface TournamentStats {
     losses: number;
 }
 
+interface Accolades {
+    tournamentStats: Record<TournamentNames, TournamentStats>;
+    seasonTitles: number;
+    bestSeasonFinish: number;
+}
+
 export interface NewPlayer extends PlayerStats {
     seasonStats: PlayerStats;
     overallRanking: number;
     divisionRanking: number;
     bio: PlayerBio;
     head2head: Record<string, HeadToHead>[];
-    tournamentStats: Record<TournamentNames, TournamentStats>;
+    accolades: Accolades;
 }
 
 export interface BasePlayer {
@@ -111,8 +117,12 @@ export type BracketPlayer = {
 };
 
 export interface BracketMatch {
+    matchId: number | null;
     player1: BracketPlayer | 'Bye' | null;
     player2: BracketPlayer | 'Bye' | null;
+    scores1?: number[];
+    scores2?: number[];
+    winner?: string | null;
 }
 
 export interface BugSubmission {
@@ -132,14 +142,21 @@ export interface Season {
     seasonEndDate: string;
 }
 
-enum TournamentNames {
+export enum TournamentNames {
     ArkOpen = 'Ark Open',
     DCOpen = 'DC Open',
     Govimbledon = 'Govimbledon',
     PghOpen = 'PGH Open',
 }
 
-type Round = {
+export const TournamentNameToImage = {
+    [TournamentNames.ArkOpen]: 'arkOpen',
+    [TournamentNames.DCOpen]: 'dcOpen',
+    [TournamentNames.Govimbledon]: 'govimbledon',
+    [TournamentNames.PghOpen]: 'pghOpen',
+};
+
+export type Round = {
     [round: string]: BracketMatch[];
 };
 
