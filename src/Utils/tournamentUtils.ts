@@ -1,4 +1,10 @@
-import { BracketMatch, Round, TournamentNameToImage, TournamentNames } from '../Types/dataTypes';
+import {
+    BracketMatch,
+    Round,
+    Tournament,
+    TournamentNameToImage,
+    TournamentNames,
+} from '../Types/dataTypes';
 
 const generateSeeds = (order: number): (number | null)[] => {
     let adjustedOrder = 1;
@@ -52,6 +58,20 @@ export const generateTournamentMatchups = (playerIds: string[]): [BracketMatch[]
     return [matchups, matchNumber];
 };
 
+const getNextPowerOf2 = (number: number): number => {
+    let power = 1;
+    while (power < number) {
+        power *= 2;
+    }
+    return power;
+};
+
+export const getNextMatchId = (playersCount: number, matchId: number): number => {
+    const roundedPlayersCount = getNextPowerOf2(playersCount);
+    const nextMatchId = Math.floor(roundedPlayersCount / 2) + Math.ceil(matchId / 2);
+    return nextMatchId;
+};
+
 export const generateTournamentRounds = (playerIds: string[]): Round => {
     const [matchups, startingMatchNumber] = generateTournamentMatchups(playerIds);
     const rounds: { [key: string]: BracketMatch[] } = {};
@@ -61,10 +81,35 @@ export const generateTournamentRounds = (playerIds: string[]): Round => {
 
     let matchNumber = startingMatchNumber;
     for (let roundNumber = 1; roundNumber <= numberOfRounds; roundNumber++) {
+        const currentRoundKey = `round${roundNumber}`;
         const roundKey = `round${roundNumber + 1}`;
         const emptyRound: BracketMatch[] = Array(matchups.length / 2 ** roundNumber)
             .fill(null)
             .map(() => ({ matchId: matchNumber++, player1: null, player2: null }));
+
+        rounds[currentRoundKey].forEach((match) => {
+            if (match.player1 === 'Bye') {
+                const nextMatchId = match.matchId
+                    ? getNextMatchId(playerIds.length, match.matchId)
+                    : null;
+
+                const nextMatch = emptyRound.find((m) => m.matchId === nextMatchId);
+                if (nextMatch) {
+                    nextMatch.player2 = match.player2;
+                }
+            } else if (match.player2 === 'Bye') {
+                const nextMatchId = match.matchId
+                    ? getNextMatchId(playerIds.length, match.matchId)
+                    : null;
+
+                const nextMatch = emptyRound.find((m) => m.matchId === nextMatchId);
+
+                if (nextMatch) {
+                    nextMatch.player1 = match.player1;
+                    console.log(nextMatch, nextMatchId, '!!');
+                }
+            }
+        });
 
         rounds[roundKey] = emptyRound;
     }
@@ -117,4 +162,29 @@ export const getRoundName = (roundInput: string, totalRounds: number): string =>
     } else {
         return `Round ${roundNumber}`;
     }
+};
+
+export const findMatchAndRoundById = (
+    tournament: Tournament,
+    playerId: string,
+): [BracketMatch, string] | null => {
+    for (const office in tournament.rounds) {
+        const rounds: Round = tournament.rounds[office];
+
+        for (const round in rounds) {
+            for (const match of rounds[round]) {
+                if (
+                    (match.player1 !== null &&
+                        match.player1 !== 'Bye' &&
+                        match.player1.playerId === playerId) ||
+                    (match.player2 !== null &&
+                        match.player2 !== 'Bye' &&
+                        match.player2.playerId === playerId)
+                ) {
+                    return [match, round];
+                }
+            }
+        }
+    }
+    return null;
 };

@@ -28,15 +28,17 @@ type BestFinish = {
 };
 
 interface TournamentStats {
-    bestFinish: BestFinish;
+    bestFinish: BestFinish | null;
     wins: number;
     losses: number;
 }
 
 interface Accolades {
     tournamentStats: Record<TournamentNames, TournamentStats>;
-    seasonTitles: number;
-    bestSeasonFinish: number;
+    overallTitles: number;
+    divisionTitles: number;
+    bestOverallinish: number | null;
+    bestDivisionalFinish: number | null;
 }
 
 export interface NewPlayer extends PlayerStats {
@@ -44,7 +46,7 @@ export interface NewPlayer extends PlayerStats {
     overallRanking: number;
     divisionRanking: number;
     bio: PlayerBio;
-    head2head: Record<string, HeadToHead>[];
+    head2head?: Record<string, HeadToHead>[];
     accolades: Accolades;
 }
 
@@ -95,11 +97,12 @@ export enum Office {
 }
 
 export interface Result {
-    playerA: Player | '';
-    playerB: Player | '';
+    playerA: Player | '' | null;
+    playerB: Player | '' | null;
     playerAScore: number;
     playerBScore: number;
     office: Office;
+    event?: TournamentNames | '';
 }
 
 export interface MatchInfo {
@@ -109,20 +112,7 @@ export interface MatchInfo {
     loserId: string;
     office: Office;
     date: string;
-}
-
-export type BracketPlayer = {
-    seed: number | null;
-    playerId: string;
-};
-
-export interface BracketMatch {
-    matchId: number | null;
-    player1: BracketPlayer | 'Bye' | null;
-    player2: BracketPlayer | 'Bye' | null;
-    scores1?: number[];
-    scores2?: number[];
-    winner?: string | null;
+    event?: TournamentNames;
 }
 
 export interface BugSubmission {
@@ -155,6 +145,20 @@ export const TournamentNameToImage = {
     [TournamentNames.Govimbledon]: 'govimbledon',
     [TournamentNames.PghOpen]: 'pghOpen',
 };
+
+export type BracketPlayer = {
+    seed: number | null;
+    playerId: string;
+};
+
+export interface BracketMatch {
+    matchId: number | null;
+    player1: BracketPlayer | 'Bye' | null;
+    player2: BracketPlayer | 'Bye' | null;
+    scores1?: number[];
+    scores2?: number[];
+    winner?: string | null;
+}
 
 export type Round = {
     [round: string]: BracketMatch[];

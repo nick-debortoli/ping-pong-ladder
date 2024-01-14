@@ -58,6 +58,7 @@ const Results: React.FC<ResultsProps> = ({ reloadResults, handleReloadResults })
                         <p>Date: {formatDateToString(match.date)}</p>
                         <p>Time: {formatDateToTime(match.date)}</p>
                         <p>Location: {match.office}</p>
+                        {match.event && <p>Event: {match.event}</p>}
                     </div>
                 </div>
             ))}

@@ -2,42 +2,47 @@ import { useEffect, useState } from 'react';
 import { BracketMatch, Office, Tournament } from '../../Types/dataTypes';
 import { usePlayers } from '../../Contexts/PlayersContext';
 import { generateTournamentRounds, getRoundName } from '../../Utils/tournamentUtils';
-import { getTournamentRounds, updateTournamentRoundsByName } from '../../database/tournaments';
+import { updateTournamentRoundsByName } from '../../database/tournaments';
 import './Bracket.scss';
 import Match from './Match';
+import { useTournaments } from '../../Contexts/TournamentContext';
 
 interface BracketProps {
-    tournament: Tournament;
     activeOffice: Office;
 }
 
-const Bracket: React.FC<BracketProps> = ({ tournament, activeOffice }) => {
+const Bracket: React.FC<BracketProps> = ({ activeOffice }) => {
     const { getPlayerById } = usePlayers();
     const [rounds, setRounds] = useState<any | null>(null);
+    const { getActiveTournament } = useTournaments();
+    const activeTournament = getActiveTournament();
+
+    const [tournament, setTournament] = useState<Tournament | null>(null);
 
     useEffect(() => {
         const updateRounds = async () => {
             try {
-                // Attempt to fetch existing rounds from the database
-                const existingRounds = await getTournamentRounds(tournament.name, activeOffice);
-
-                // Check if rounds exist in the database
-                if (existingRounds && Object.keys(existingRounds).length > 0) {
-                    const sortedRounds = (
-                        Object.entries(existingRounds) as [string, BracketMatch[]][]
-                    ).sort((a, b) => b[1].length - a[1].length);
-                    setRounds(sortedRounds);
-                } else {
-                    const players = tournament.seeds[activeOffice];
+                if (!tournament || !tournament.rounds || !tournament.rounds[activeOffice]) {
+                    const players = tournament?.seeds[activeOffice];
                     const tournamentRounds = generateTournamentRounds(players);
-                    await updateTournamentRoundsByName(
-                        tournamentRounds,
-                        tournament.name,
-                        activeOffice,
-                    );
+                    if (tournament?.name) {
+                        await updateTournamentRoundsByName(
+                            tournamentRounds,
+                            tournament?.name,
+                            activeOffice,
+                        );
+                    }
 
                     const sortedRounds = (
                         Object.entries(tournamentRounds) as [string, BracketMatch[]][]
+                    ).sort((a, b) => b[1].length - a[1].length);
+                    setRounds(sortedRounds);
+                } else {
+                    const sortedRounds = (
+                        Object.entries(tournament.rounds[activeOffice]) as [
+                            string,
+                            BracketMatch[],
+                        ][]
                     ).sort((a, b) => b[1].length - a[1].length);
                     setRounds(sortedRounds);
                 }
@@ -45,7 +50,7 @@ const Bracket: React.FC<BracketProps> = ({ tournament, activeOffice }) => {
                 console.error('Error fetching or updating tournament rounds:', error);
             }
         };
-
+        setTournament(activeTournament);
         updateRounds();
     }, [tournament, activeOffice, getPlayerById]);
 
@@ -59,14 +64,15 @@ const Bracket: React.FC<BracketProps> = ({ tournament, activeOffice }) => {
                             <span className="round-name">
                                 {getRoundName(roundName, rounds.length)}
                             </span>
-                            {typedMatches.map((match, index) => (
-                                <Match
-                                    match={match}
-                                    tournament={tournament}
-                                    activeOffice={activeOffice}
-                                    key={index}
-                                />
-                            ))}
+                            {tournament &&
+                                typedMatches.map((match, index) => (
+                                    <Match
+                                        match={match}
+                                        tournament={tournament}
+                                        activeOffice={activeOffice}
+                                        key={index}
+                                    />
+                                ))}
                         </div>
                     );
                 })}

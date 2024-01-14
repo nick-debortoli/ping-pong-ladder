@@ -33,7 +33,7 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
         const { email, firstName, lastName, office, playStyle, country } = trimmedInput;
         if (!isEmailValid) {
             alert('Invalid email format - must use a Govini email address');
-        } else if (firstName.trim() === '' || lastName.trim() === '') {
+        } else if (firstName === '' || lastName === '') {
             alert('Please enter your full name');
         } else {
             try {

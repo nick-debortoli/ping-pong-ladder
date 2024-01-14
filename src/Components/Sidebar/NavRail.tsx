@@ -28,6 +28,9 @@ const NavRail: React.FC<NavRailProp> = ({ handleClose }) => {
                 />
                 <NavItem icon={<Person4OutlinedIcon />} section={PLAYERS} onClick={handleClose} />
             </ul>
+            {import.meta.env.VITE_ENVIRONMENT !== 'prod' && (
+                <div className="dev-tag">DEVELOPMENT</div>
+            )}
         </nav>
     );
 };

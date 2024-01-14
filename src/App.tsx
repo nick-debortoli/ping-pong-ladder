@@ -10,6 +10,7 @@ import { PlayersProvider } from './Contexts/PlayersContext.tsx';
 import { isAdmin } from './Utils/playerUtils.ts';
 import AdminPage from './Components/AdminPage/AdminPage.tsx';
 import { SectionProvider } from './Contexts/SectionContext.tsx';
+import { TournamentProvider } from './Contexts/TournamentContext.tsx';
 
 const App: React.FC = () => {
     const [user, setUser] = useState<User | null>(null);
@@ -27,18 +28,22 @@ const App: React.FC = () => {
         <div id="app" className="app">
             <PlayersProvider>
                 <SectionProvider>
-                    <Router>
-                        <Routes>
-                            <Route path="/" element={<Registration />} />
-                            {user ? (
-                                <Route path="/home" element={<Home />} />
-                            ) : (
-                                <Route path="/home" element={<Navigate to="/" />} />
-                            )}
-                            {isAdmin(user?.uid) && <Route path="/admin" element={<AdminPage />} />}
-                            <Route path="*" element={<NotFound />} />
-                        </Routes>
-                    </Router>
+                    <TournamentProvider>
+                        <Router>
+                            <Routes>
+                                <Route path="/" element={<Registration />} />
+                                {user ? (
+                                    <Route path="/home" element={<Home />} />
+                                ) : (
+                                    <Route path="/home" element={<Navigate to="/" />} />
+                                )}
+                                {isAdmin(user?.uid) && (
+                                    <Route path="/admin" element={<AdminPage />} />
+                                )}
+                                <Route path="*" element={<NotFound />} />
+                            </Routes>
+                        </Router>
+                    </TournamentProvider>
                 </SectionProvider>
             </PlayersProvider>
         </div>
