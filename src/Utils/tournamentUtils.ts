@@ -134,7 +134,6 @@ export const generateTournamentRounds = (playerIds: string[]): Round => {
 
                 if (nextMatch) {
                     nextMatch.player1 = match.player1;
-                    console.log(nextMatch, nextMatchId, '!!');
                 }
             }
         });
@@ -196,23 +195,34 @@ export const findMatchAndRoundById = (
     tournament: Tournament,
     playerId: string,
 ): [BracketMatch, string] | null => {
+    let highestMatch: [BracketMatch, string] | null = null;
+
     for (const office in tournament.rounds) {
         const rounds: Round = tournament.rounds[office];
 
         for (const round in rounds) {
             for (const match of rounds[round]) {
-                if (
+                const isPlayerInMatch =
                     (match.player1 !== null &&
                         match.player1 !== 'Bye' &&
                         match.player1.playerId === playerId) ||
                     (match.player2 !== null &&
                         match.player2 !== 'Bye' &&
-                        match.player2.playerId === playerId)
-                ) {
-                    return [match, round];
+                        match.player2.playerId === playerId);
+
+                // Check if matchId is not null and is the highest so far
+                if (isPlayerInMatch && match.matchId !== null) {
+                    if (
+                        !highestMatch ||
+                        (highestMatch[0].matchId !== null &&
+                            match.matchId > highestMatch[0].matchId)
+                    ) {
+                        highestMatch = [match, round];
+                    }
                 }
             }
         }
     }
-    return null;
+
+    return highestMatch;
 };

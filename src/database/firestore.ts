@@ -32,7 +32,6 @@ export const updateDivisionRankings = async (
 ): Promise<void> => {
     const offices: string[] = [];
     offices.push(officeOne);
-    console.log(officeOne);
 
     if (officeTwo && officeOne !== officeTwo) {
         offices.push(officeTwo);

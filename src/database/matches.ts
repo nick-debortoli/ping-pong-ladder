@@ -119,7 +119,7 @@ export const addTournamentMatch = async (
     await addMatch(matchInfo);
 
     const newRounds = tournament.rounds[office];
-    const roundName = getRoundName(round, newRounds.length);
+    const roundName = getRoundName(round, Math.ceil(Math.log2(tournament.seeds[office].length)));
 
     const player1Score = player1.playerId === playerA.id ? playerAScore : playerBScore;
     const player2Score = player2.playerId === playerA.id ? playerAScore : playerBScore;
@@ -136,6 +136,7 @@ export const addTournamentMatch = async (
     match.scores2.push(player2Score);
 
     const winningGame = roundName === 'Finals' || roundName == 'Semifinals' ? 3 : 2;
+
     const roundResults = determineRoundWinner(
         match.scores1,
         match.scores2,
@@ -147,8 +148,13 @@ export const addTournamentMatch = async (
     if (roundResults.winner) {
         const { winner: winnerId } = roundResults;
         match.winner = winnerId;
+        const roundRegex = round.match(/round(\d+)/);
+        let roundNumber = 1;
+        if (roundRegex) {
+            roundNumber = parseInt(roundRegex[1], 10);
+        }
 
-        const nextMatchId = getNextMatchId(tournament.seeds[office].length, matchId);
+        const nextMatchId = getNextMatchId(tournament.seeds[office].length, matchId, roundNumber);
         const winnerSeed = player1.playerId === winnerId ? player1.seed : player2.seed;
         if (winnerSeed) {
             advanceToNextRound(newRounds, matchId, nextMatchId, winnerSeed, winnerId);
