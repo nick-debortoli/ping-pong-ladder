@@ -66,10 +66,38 @@ const getNextPowerOf2 = (number: number): number => {
     return power;
 };
 
-export const getNextMatchId = (playersCount: number, matchId: number): number => {
+const countMatchesBefore = (totalMatches: number, level: number): number => {
+    if (level === 1) {
+        return 0;
+    }
+
+    const totalNodes = totalMatches - 1;
+
+    let height = 0;
+    while ((1 << height) - 1 < totalNodes) {
+        height++;
+    }
+
+    const totalNodesAtAndAbove = (1 << height) - 1;
+
+    const nodesAtAndAboveLevel = (1 << (height - level + 1)) - 1;
+
+    const nodesToLeft = totalNodesAtAndAbove - nodesAtAndAboveLevel;
+
+    return nodesToLeft;
+};
+
+export const getNextMatchId = (playersCount: number, matchId: number, round: number): number => {
     const roundedPlayersCount = getNextPowerOf2(playersCount);
-    const nextMatchId = Math.floor(roundedPlayersCount / 2) + Math.ceil(matchId / 2);
-    return nextMatchId;
+    const firstMatchInRound = countMatchesBefore(roundedPlayersCount, round) + 1;
+
+    const relativeMatchId = matchId - firstMatchInRound;
+
+    const nextRoundMatchId = Math.floor(relativeMatchId / 2);
+
+    const firstMatchInNextRound = countMatchesBefore(roundedPlayersCount, round + 1) + 1;
+
+    return firstMatchInNextRound + nextRoundMatchId;
 };
 
 export const generateTournamentRounds = (playerIds: string[]): Round => {
@@ -90,7 +118,7 @@ export const generateTournamentRounds = (playerIds: string[]): Round => {
         rounds[currentRoundKey].forEach((match) => {
             if (match.player1 === 'Bye') {
                 const nextMatchId = match.matchId
-                    ? getNextMatchId(playerIds.length, match.matchId)
+                    ? getNextMatchId(playerIds.length, match.matchId, roundNumber)
                     : null;
 
                 const nextMatch = emptyRound.find((m) => m.matchId === nextMatchId);
@@ -99,7 +127,7 @@ export const generateTournamentRounds = (playerIds: string[]): Round => {
                 }
             } else if (match.player2 === 'Bye') {
                 const nextMatchId = match.matchId
-                    ? getNextMatchId(playerIds.length, match.matchId)
+                    ? getNextMatchId(playerIds.length, match.matchId, roundNumber)
                     : null;
 
                 const nextMatch = emptyRound.find((m) => m.matchId === nextMatchId);

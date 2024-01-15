@@ -22,30 +22,30 @@ const Bracket: React.FC<BracketProps> = ({ activeOffice }) => {
     useEffect(() => {
         const updateRounds = async () => {
             try {
-                // if (!tournament || !tournament.rounds || !tournament.rounds[activeOffice]) {
-                const players = tournament?.seeds[activeOffice];
-                const tournamentRounds = generateTournamentRounds(players);
-                if (tournament?.name) {
-                    await updateTournamentRoundsByName(
-                        tournamentRounds,
-                        tournament?.name,
-                        activeOffice,
-                    );
-                }
+                if (!tournament || !tournament.rounds || !tournament.rounds[activeOffice]) {
+                    const players = tournament?.seeds[activeOffice];
+                    const tournamentRounds = generateTournamentRounds(players);
+                    if (tournament?.name) {
+                        await updateTournamentRoundsByName(
+                            tournamentRounds,
+                            tournament?.name,
+                            activeOffice,
+                        );
+                    }
 
-                const sortedRounds = (
-                    Object.entries(tournamentRounds) as [string, BracketMatch[]][]
-                ).sort((a, b) => b[1].length - a[1].length);
-                setRounds(sortedRounds);
-                // } else {
-                //     const sortedRounds = (
-                //         Object.entries(tournament.rounds[activeOffice]) as [
-                //             string,
-                //             BracketMatch[],
-                //         ][]
-                //     ).sort((a, b) => b[1].length - a[1].length);
-                //     setRounds(sortedRounds);
-                // }
+                    const sortedRounds = (
+                        Object.entries(tournamentRounds) as [string, BracketMatch[]][]
+                    ).sort((a, b) => b[1].length - a[1].length);
+                    setRounds(sortedRounds);
+                } else {
+                    const sortedRounds = (
+                        Object.entries(tournament.rounds[activeOffice]) as [
+                            string,
+                            BracketMatch[],
+                        ][]
+                    ).sort((a, b) => b[1].length - a[1].length);
+                    setRounds(sortedRounds);
+                }
             } catch (error) {
                 console.error('Error fetching or updating tournament rounds:', error);
             }
