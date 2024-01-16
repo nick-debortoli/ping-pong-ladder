@@ -19,7 +19,7 @@ import { isRecentMatch } from '../Utils/matchUtils';
 import { getNextMatchId, getRoundName } from '../Utils/tournamentUtils';
 import { updateTournamentInfo } from './tournaments';
 
-const updateRecentMatchesArray = (newMatchId, existingRecentMatches, maxMatches = 3) => {
+const updateRecentMatchesArray = (newMatchId, existingRecentMatches, maxMatches = 20) => {
     let updatedMatches = [newMatchId];
 
     if (existingRecentMatches && existingRecentMatches.length) {
