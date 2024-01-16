@@ -48,6 +48,7 @@ export const updateDivisionRankings = async (
             id: doc.id,
             ...(doc.data() as BasePlayer),
         }));
+
         await updateRankings(officePlayers, 'divisionRanking');
     }
 };

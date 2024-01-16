@@ -9,7 +9,13 @@ export const TOURNAMENTS = 'Tournaments';
 export const SIGN_IN = 'sign-in';
 export const SIGN_UP = 'sign-up';
 
-/** Player Data Data */
+/** Results Types */
+export enum SUBMISSION {
+    TOURNAMENT = 'Tournament',
+    SEASON = 'Season',
+}
+
+/** Player Data */
 export const BASE_ELO = 1000;
 
 export const MOBILE_WIDTH = 780;

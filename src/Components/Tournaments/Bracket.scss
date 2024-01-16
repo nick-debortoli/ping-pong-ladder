@@ -3,43 +3,92 @@
 .tournament {
     display: flex;
     justify-content: space-around;
+    position: absolute;
+    top: 10vmin;
+    transform: translateX(15vmin);
+    width: auto;
+    height: auto;
+    padding-bottom: 20vmin;
+    margin: 2.5%;
 
     .round {
         display: flex;
         flex-direction: column;
         justify-content: space-around;
+        align-items: center;
         border-left: 1px solid $sidebar-border;
-        padding: 0 5%;
+        padding: 40px 5% 0 5%;
+
+        .round-name {
+            position: absolute;
+            top: 0;
+            width: auto;
+            white-space: nowrap;
+        }
     }
 
     .match {
         border: 2px solid $sidebar-border;
         padding: 10px;
         margin: 5px;
-        width: 175px;
+        width: 200px;
         height: 75px;
         display: flex;
-        flex-direction: column;
         justify-content: space-around;
 
-        .player {
-            padding: 10px 0;
+        .players {
             display: flex;
-            align-items: center;
-            justify-content: flex-start;
+            flex-direction: column;
+            justify-content: space-around;
+            height: 75px;
+
+            .player {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+
+                &.round-winner {
+                    color: $govini-orange;
+                }
+
+                &.round-loser {
+                    opacity: 0.5;
+                }
+            }
+
+            .player-flag {
+                width: 10px;
+                height: 10px;
+                padding-right: 5px;
+            }
+
+            .player-seed {
+                color: white;
+                opacity: 0.5;
+                padding-left: 5px;
+            }
         }
 
-        .player-flag {
-            width: 10px;
-            height: 10px;
-            padding-right: 5px;
-        }
+        .scores-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            height: 75px;
+            margin-left: auto;
+            .scores {
+                display: flex;
+                justify-content: space-between;
+                gap: 6px;
 
-        .player-seed {
-            opacity: 0.5;
-            padding-left: 5px;
+                .score {
+                    text-align: center;
+                    width: 14px;
+                    &.low-score {
+                        opacity: 0.5;
+                    }
+                }
+            }
         }
-
         &::after {
             content: '';
             position: relative;

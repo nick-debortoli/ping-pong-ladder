@@ -1,19 +1,48 @@
+@import '../../Themes/variables';
+
 .tournaments-container {
-    height: 95%;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
     justify-content: flex-start;
     gap: 10px;
     margin: 2.5%;
-    overflow: scroll;
     width: 95%;
-    padding: 2.5%;
+    position: relative;
+    width: 95%;
+    height: 95vh;
+    overflow: auto;
 
     .tournament-top-bar {
         display: flex;
-        height: 35px;
+        height: 10vh;
         align-items: center;
         justify-content: space-between;
+        position: sticky;
+        top: 0;
+        left: 0;
+        background: $dark-background;
+        z-index: 100;
+        padding: 0 2vw;
+
+        .tournament-name {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            .tournament-logo {
+                height: 75px;
+            }
+        }
+
+        &:before {
+            content: '';
+            display: block;
+            width: 200px;
+            height: 35px;
+            background-color: $dark-background;
+            position: absolute;
+            left: -200px;
+            top: 0;
+        }
     }
 }

@@ -5,9 +5,38 @@
     height: 100%;
     background-color: $app-background;
     border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
+    .tabs {
+        position: absolute;
+        font-size: 0.75em;
+        top: 44px;
+        right: 12px;
+        display: flex;
+
+        .results-toggle-btn {
+            text-align: center;
+            background: $dark-background;
+            padding: 4px 12px;
+            width: 7em;
+            cursor: pointer;
+
+            &:hover {
+                mix-blend-mode: screen;
+            }
+
+            &.active {
+                background-color: $govini-orange;
+            }
+
+            &.left-toggle {
+                border-radius: 6px 0 0 6px;
+            }
+
+            &.right-toggle {
+                border-radius: 0 6px 6px 0;
+            }
+        }
+    }
 
     .submit-title {
         font-size: 2em;

@@ -24,13 +24,21 @@ interface PlayerStats {
 
 type BestFinish = {
     round: string;
-    year: number;
+    years: number[];
 };
 
 interface TournamentStats {
-    bestFinish: BestFinish;
+    bestFinish: BestFinish | null;
     wins: number;
     losses: number;
+}
+
+interface Accolades {
+    tournamentStats: Record<TournamentNames, TournamentStats>;
+    overallTitles: number;
+    divisionTitles: number;
+    bestOverallinish: number | null;
+    bestDivisionalFinish: number | null;
 }
 
 export interface NewPlayer extends PlayerStats {
@@ -38,8 +46,8 @@ export interface NewPlayer extends PlayerStats {
     overallRanking: number;
     divisionRanking: number;
     bio: PlayerBio;
-    head2head: Record<string, HeadToHead>[];
-    tournamentStats: Record<TournamentNames, TournamentStats>;
+    head2head?: Record<string, HeadToHead>[];
+    accolades: Accolades;
 }
 
 export interface BasePlayer {
@@ -89,11 +97,12 @@ export enum Office {
 }
 
 export interface Result {
-    playerA: Player | '';
-    playerB: Player | '';
+    playerA: Player | '' | null;
+    playerB: Player | '' | null;
     playerAScore: number;
     playerBScore: number;
     office: Office;
+    event?: TournamentNames | '';
 }
 
 export interface MatchInfo {
@@ -103,16 +112,7 @@ export interface MatchInfo {
     loserId: string;
     office: Office;
     date: string;
-}
-
-export type BracketPlayer = {
-    seed: number | null;
-    playerId: string;
-};
-
-export interface BracketMatch {
-    player1: BracketPlayer | 'Bye' | null;
-    player2: BracketPlayer | 'Bye' | null;
+    event?: TournamentNames;
 }
 
 export interface BugSubmission {
@@ -132,14 +132,35 @@ export interface Season {
     seasonEndDate: string;
 }
 
-enum TournamentNames {
+export enum TournamentNames {
     ArkOpen = 'Ark Open',
     DCOpen = 'DC Open',
     Govimbledon = 'Govimbledon',
     PghOpen = 'PGH Open',
 }
 
-type Round = {
+export const TournamentNameToImage = {
+    [TournamentNames.ArkOpen]: 'arkOpen',
+    [TournamentNames.DCOpen]: 'dcOpen',
+    [TournamentNames.Govimbledon]: 'govimbledon',
+    [TournamentNames.PghOpen]: 'pghOpen',
+};
+
+export type BracketPlayer = {
+    seed: number | null;
+    playerId: string;
+};
+
+export interface BracketMatch {
+    matchId: number | null;
+    player1: BracketPlayer | 'Bye' | null;
+    player2: BracketPlayer | 'Bye' | null;
+    scores1?: number[];
+    scores2?: number[];
+    winner?: string | null;
+}
+
+export type Round = {
     [round: string]: BracketMatch[];
 };
 

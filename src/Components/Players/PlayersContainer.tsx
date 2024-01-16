@@ -1,7 +1,7 @@
 // import { useState } from "react";
 import { PlayerTabs } from '../../Types/dataTypes';
 import PlayerBios from './PlayerBios';
-import './PlayersContainer.scss'
+import './PlayersContainer.scss';
 
 const PlayersContainer: React.FC = () => {
     // const [ currentTab, setCurrentTab ] = useState<PlayerTabs>(PlayerTabs.BIOS);

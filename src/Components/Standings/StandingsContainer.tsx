@@ -32,7 +32,6 @@ const StandingsContainer: React.FC = () => {
                     wins: player.wins,
                     losses: player.losses,
                     elo: player.elo,
-                    turnedPro: player.turnedPro,
                     rank: index + 1,
                     winningPercentage: calculateWinPercentage(player),
                 }));
