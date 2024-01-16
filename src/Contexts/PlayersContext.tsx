@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
-import { Player } from '../Types/dataTypes';
+import { HeadToHead, Player } from '../Types/dataTypes';
 import { firestore } from '../database/firestore';
 import { onSnapshot, collection } from 'firebase/firestore';
 import { getPlayers } from '../database/players';
@@ -9,6 +9,7 @@ interface PlayersContextProps {
     loading: boolean;
     getPlayerById: (id: string) => Player | null;
     getTopPlayer: () => Player;
+    getH2HByOpponent: (playerId: string, opponentId: string) => HeadToHead | null;
 }
 
 const PlayersContext = createContext<PlayersContextProps | undefined>(undefined);
@@ -80,6 +81,15 @@ export const PlayersProvider: React.FC<PlayerProviderProps> = ({ children }) => 
         return players[0];
     };
 
+    const getH2HByOpponent = (playerId: string, opponentId: string): HeadToHead | null => {
+        const playerData = getPlayerById(playerId);
+        const headToHeadData = playerData?.head2head;
+        if (headToHeadData) {
+            return headToHeadData[opponentId];
+        }
+        return null;
+    };
+
     return (
         <PlayersContext.Provider
             value={{
@@ -87,6 +97,7 @@ export const PlayersProvider: React.FC<PlayerProviderProps> = ({ children }) => 
                 loading,
                 getPlayerById,
                 getTopPlayer,
+                getH2HByOpponent
             }}
         >
             {children}

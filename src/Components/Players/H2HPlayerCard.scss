@@ -1,0 +1,23 @@
+@import '../../Themes/variables';
+
+.h2h-player-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    border-bottom: 1px solid $sidebar-border;
+
+    grid-row: 1 / 2;
+
+    .player-name {
+        display: inline;
+        position: relative;
+        top: 1em;
+        margin: 0 1em;
+    }
+
+    &.first-card {
+        border-right: 2px solid $sidebar-border;
+        align-items: flex-start;
+    }
+}

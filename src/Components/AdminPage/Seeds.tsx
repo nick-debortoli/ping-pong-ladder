@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Office, Tournament } from '../../Types/dataTypes';
-import OfficeToggle from '../OfficeToggle/OfficeToggle';
+import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
 import './Seeds.scss';
 import { usePlayers } from '../../Contexts/PlayersContext';
 import { updateTournamentInfo } from '../../database/tournaments';
@@ -14,10 +14,6 @@ const Seeds: React.FC<SeedsProps> = ({ tournament, handleUpdateTournament }) => 
     const [areSeedsGenerated, setAreSeedsGenerated] = useState<boolean>(false);
     const [activeOffice, setActiveOffice] = useState<Office>(Office.PGH);
     const { players, getPlayerById } = usePlayers();
-
-    const handleOfficeClick = (office: Office): void => {
-        setActiveOffice(office);
-    };
 
     const handleGenerateSeeds = (): void => {
         const filteredPlayers = players.filter((player) => {
@@ -58,7 +54,7 @@ const Seeds: React.FC<SeedsProps> = ({ tournament, handleUpdateTournament }) => 
         <div className="seeds">
             <div className="seeds-topbar">
                 <h5>Seeds</h5>
-                <OfficeToggle onOfficeClick={handleOfficeClick} />
+                <ToggleSwitch setTab={setActiveOffice} tabOptions={[Office.PGH, Office.DC]} />
             </div>
             <div className="player-seeds">
                 {(tournament.seeds?.[activeOffice] || []).map((id, index) => {

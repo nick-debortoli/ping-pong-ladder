@@ -1,4 +1,4 @@
-interface HeadToHead {
+export interface HeadToHead {
     losses: number;
     wins: number;
     pointsFor: number;
@@ -46,7 +46,7 @@ export interface NewPlayer extends PlayerStats {
     overallRanking: number;
     divisionRanking: number;
     bio: PlayerBio;
-    head2head?: Record<string, HeadToHead>[];
+    head2head?: Record<string, HeadToHead>;
     accolades: Accolades;
 }
 
@@ -63,6 +63,7 @@ export interface BasePlayer {
     country: string;
     playStyle: 'RH' | 'LH';
     turnedPro: number;
+    head2head?: Record<string, HeadToHead>;
 }
 
 export interface Player extends BasePlayer {
@@ -123,8 +124,8 @@ export interface BugSubmission {
 }
 
 export enum PlayerTabs {
-    BIOS = 'bios',
-    H2H = 'h2h',
+    BIOS = 'Bios',
+    H2H = 'H2H',
 }
 
 export interface Season {

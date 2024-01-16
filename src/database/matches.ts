@@ -343,3 +343,27 @@ export const getRecentMatches = async (): Promise<Array<MatchInfo> | null> => {
         return null;
     }
 };
+
+export const getMatchesByIds = async (matchIds: string[]): Promise<Array<MatchInfo>> => {
+    try {
+        const matchPromises = matchIds.map(async (matchId) => {
+            const matchRef = doc(firestore, 'Matches', matchId);
+            const docSnapshot = await getDoc(matchRef);
+
+            if (docSnapshot.exists()) {
+                return {
+                    ...(docSnapshot.data() as MatchInfo),
+                };
+            } else {
+                console.log(`No match found with ID: ${matchId}`);
+                return null;
+            }
+        });
+
+        const matches = await Promise.all(matchPromises);
+        return matches.filter((match) => match !== null) as Array<MatchInfo>;
+    } catch (error) {
+        console.error('Error fetching matches: ', error);
+        return [];
+    }
+};
