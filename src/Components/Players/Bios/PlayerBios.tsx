@@ -1,6 +1,6 @@
 import { Autocomplete, IconButton, TextField, Tooltip, styled } from '@mui/material';
-import { usePlayers } from '../../Contexts/PlayersContext';
-import { Player } from '../../Types/dataTypes';
+import { usePlayers } from '../../../Contexts/PlayersContext';
+import { Player } from '../../../Types/dataTypes';
 import { useState } from 'react';
 import PlayerCard from './PlayerCard';
 import './PlayerBios.scss';

@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import { HeadToHead, Player } from '../Types/dataTypes';
 import { firestore } from '../database/firestore';
-import { onSnapshot, collection } from 'firebase/firestore';
+import { onSnapshot, collection, getDocs } from 'firebase/firestore';
 import { getPlayers } from '../database/players';
 
 interface PlayersContextProps {
@@ -28,14 +28,28 @@ export const PlayersProvider: React.FC<PlayerProviderProps> = ({ children }) => 
 
             const unsubscribe = onSnapshot(
                 playersRef,
-                (snapshot) => {
-                    const playersData: Array<Player> = snapshot.docs.map((doc) => {
+                async (snapshot) => {
+                    const playersData: Array<Player> = [];
+
+                    for (const doc of snapshot.docs) {
                         const playerData = doc.data() as Omit<Player, 'id'>;
-                        return {
-                            id: doc.id,
+                        const id = doc.id;
+
+                        // Fetch head2head data for each player
+                        const head2HeadRef = collection(firestore, `Players/${id}/head2head`);
+                        const head2HeadSnapshot = await getDocs(head2HeadRef);
+                        const head2HeadData: Record<string, HeadToHead> = {};
+                        head2HeadSnapshot.docs.forEach((doc) => {
+                            head2HeadData[doc.id] = doc.data() as HeadToHead;
+                        });
+
+                        // Add head2head data to the player
+                        playersData.push({
+                            id,
                             ...playerData,
-                        };
-                    });
+                            head2head: head2HeadData,
+                        });
+                    }
 
                     setPlayers(playersData);
                     setLoading(false);
@@ -83,6 +97,8 @@ export const PlayersProvider: React.FC<PlayerProviderProps> = ({ children }) => 
 
     const getH2HByOpponent = (playerId: string, opponentId: string): HeadToHead | null => {
         const playerData = getPlayerById(playerId);
+        console.log(playerData);
+
         const headToHeadData = playerData?.head2head;
         if (headToHeadData) {
             return headToHeadData[opponentId];
@@ -97,7 +113,7 @@ export const PlayersProvider: React.FC<PlayerProviderProps> = ({ children }) => 
                 loading,
                 getPlayerById,
                 getTopPlayer,
-                getH2HByOpponent
+                getH2HByOpponent,
             }}
         >
             {children}

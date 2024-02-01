@@ -1,0 +1,50 @@
+@import '../../../Themes/variables';
+
+.h2h-player-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: 1px solid $sidebar-border;
+    grid-row: 1 / 2;
+
+    .player-name {
+        display: inline;
+        position: relative;
+        top: 1em;
+        padding: 0.25em 0.5em;
+        border-radius: 0.5em;
+        background: white;
+        color: $dark-background;
+    }
+
+    &.h2h-winner {
+        .player-name {
+            background-color: $govini-orange;
+            color: white;
+        }
+    }
+
+    .h2h-player-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0 5vmin;
+        transform: translateX(10vmin);
+
+        .h2h-card {
+            margin-top: 2em;
+            width: 20vmin;
+            height: 30vh;
+            background: $light-background;
+            border: 3px solid $sidebar-border;
+            border-radius: 6px;
+        }
+    }
+
+    &.first-card {
+        .h2h-player-container {
+            transform: translateX(-10vmin);
+        }
+    }
+}

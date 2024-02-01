@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Player } from '../../Types/dataTypes';
+import { Player } from '../../../Types/dataTypes';
 import './PlayerCard.scss';
-import { calculateWinPercentage, getFlag, getHeadshot } from '../../Utils/playerUtils';
+import { calculateWinPercentage, getFlag, getHeadshot } from '../../../Utils/playerUtils';
 import { Person } from '@mui/icons-material';
 
 interface PlayerCardProps {

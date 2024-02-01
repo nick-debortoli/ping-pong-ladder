@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { PlayerTabs } from '../../Types/dataTypes';
-import PlayerBios from './PlayerBios';
+import PlayerBios from './Bios/PlayerBios';
 import './PlayersContainer.scss';
 import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
-import Head2Head from './Head2Head';
+import Head2Head from './H2H/Head2Head';
 
 const PlayersContainer: React.FC = () => {
     const [currentTab, setCurrentTab] = useState<PlayerTabs>(PlayerTabs.BIOS);

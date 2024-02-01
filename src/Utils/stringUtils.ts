@@ -30,3 +30,9 @@ export const trimFormInput = (player: FormData): FormData => {
         country: player.country.trim(),
     };
 };
+
+export const vminToPixels = (vmin: number) => {
+    const vw = window.innerWidth / 100;
+    const vh = window.innerHeight / 100;
+    return Math.min(vw, vh) * vmin;
+};
