@@ -3,6 +3,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { getSeasonInfo, updateSeasonInfo } from '../../database/settings';
 import { Season } from '../../Types/dataTypes';
+import './SeasonSettings.scss';
 
 const SeasonSettings: React.FC = () => {
     const [seasonDate, setSeasonDate] = useState<Season>({
@@ -46,42 +47,46 @@ const SeasonSettings: React.FC = () => {
             setIsFormDirty(true);
         }
     };
-    
+
     return (
-        <>
-            <h4>Season Settings</h4>
-            <form onSubmit={handleSubmit} className="admin-settings-form">
-                <div className="form-group">
-                    <label className="season-start" htmlFor="season-start">
-                        Season Start
-                    </label>
-                    <DatePicker
-                        selected={seasonDate.seasonStartDate}
-                        onChange={handleStartDateChange}
-                        id="season-start"
-                        className="form-control"
-                    />
-                </div>
-                <div className="form-group">
-                    <label className="season-end" htmlFor="season-end">
-                        Season End
-                    </label>
-                    <DatePicker
-                        selected={seasonDate.seasonEndDate}
-                        onChange={handleEndDateChange}
-                        id="season-end"
-                        className="form-control"
-                    />
-                </div>
-                <button
-                    type="submit"
-                    className={`${isFormDirty ? '' : 'disabled'}`}
-                    disabled={!isFormDirty}
-                >
-                    Save
-                </button>
-            </form>
-        </>
+        <div className="season-settings">
+            <div>
+                <h4>Season Settings</h4>
+                <form onSubmit={handleSubmit} className="admin-settings-form">
+                    <div className="form-group">
+                        <label className="season-start" htmlFor="season-start">
+                            Season Start
+                        </label>
+                        <DatePicker
+                            selected={seasonDate.seasonStartDate}
+                            onChange={handleStartDateChange}
+                            id="season-start"
+                            className="form-control"
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label className="season-end" htmlFor="season-end">
+                            Season End
+                        </label>
+                        <DatePicker
+                            selected={seasonDate.seasonEndDate}
+                            onChange={handleEndDateChange}
+                            id="season-end"
+                            className="form-control"
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        className={`${isFormDirty ? '' : 'disabled'}`}
+                        disabled={!isFormDirty}
+                    >
+                        Save
+                    </button>
+                </form>
+            </div>
+
+            <button className="reset-season">Reset Season</button>
+        </div>
     );
 };
 
