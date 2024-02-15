@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Tournament } from '../../Types/dataTypes';
+import { FormControlLabel, Switch } from '@mui/material';
 
 interface TournamentFormProps {
     tournament: Tournament;
@@ -13,8 +14,21 @@ const TournamentForm: React.FC<TournamentFormProps> = ({
     handleSubmit,
     handleUpdateTournament,
 }) => {
+    const { name, startDate, endDate, seedsLock, topSeedPercentage, isActive } = tournament;
+
     const [isDirty, setIsDirty] = useState<boolean>(false);
-    const { name, startDate, endDate, seedsLock, topSeedPercentage } = tournament;
+    const [isTournamentActive, setIsTournamentActive] = useState<boolean>(isActive);
+
+    const handleActiveChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const isActive = event.target.checked;
+        const updatedTournament: Tournament = {
+            ...tournament,
+            isActive,
+        };
+        setIsTournamentActive(isActive);
+        handleUpdateTournament(updatedTournament);
+        setIsDirty(true);
+    };
 
     const handleSeedLockChange = (date: string | null) => {
         if (date) {
@@ -106,6 +120,12 @@ const TournamentForm: React.FC<TournamentFormProps> = ({
                     onChange={(e) => handleSeedPctChange(e.target.value)}
                     type="text"
                     name="topSeedPct"
+                />
+            </div>
+            <div className="form-group">
+                <FormControlLabel
+                    control={<Switch checked={isTournamentActive} onChange={handleActiveChange} />}
+                    label={isTournamentActive ? 'Active' : 'Inactive'}
                 />
             </div>
 

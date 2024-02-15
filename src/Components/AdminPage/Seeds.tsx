@@ -21,14 +21,19 @@ const Seeds: React.FC<SeedsProps> = ({ tournament, handleUpdateTournament }) => 
 
     const handleGenerateSeeds = (): void => {
         const filteredPlayers = players.filter((player) => {
-            return player.office === activeOffice && (player.wins > 0 || player.losses > 0);
+            return (
+                player.bio.office === activeOffice &&
+                (player.seasonStats.wins > 0 || player.seasonStats.losses > 0)
+            );
         });
 
         const percentage = Math.floor(
             (tournament.topSeedPercentage / 100) * filteredPlayers.length,
         );
 
-        const sortedPlayers = filteredPlayers.sort((a, b) => a.divisionRanking - b.divisionRanking);
+        const sortedPlayers = filteredPlayers.sort(
+            (a, b) => a.seasonStats.divisionRanking - b.seasonStats.divisionRanking,
+        );
 
         const topPlayerIds = sortedPlayers.slice(0, percentage).map((player) => player.id);
         const bottomPlayerIds = sortedPlayers.slice(percentage).map((player) => player.id);
@@ -67,7 +72,7 @@ const Seeds: React.FC<SeedsProps> = ({ tournament, handleUpdateTournament }) => 
                         <div key={index} className="player-seed">
                             <span className="seed-number">{index + 1})</span>
                             <div>
-                                {player?.firstName} {player?.lastName}
+                                {player?.bio.firstName} {player?.bio.lastName}
                             </div>
                         </div>
                     );

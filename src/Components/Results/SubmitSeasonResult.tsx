@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { usePlayers } from '../../Contexts/PlayersContext';
-import { Office, Player, Result } from '../../Types/dataTypes';
+import { Office, NewPlayer, Result } from '../../Types/dataTypes';
 import { addMatch, checkRecentMatches } from '../../database/matches';
 
 interface SubmitSeasonResultProps {
@@ -21,17 +21,17 @@ const SubmitSeasonResult: React.FC<SubmitSeasonResultProps> = ({ handleReloadRes
 
     const { players } = usePlayers();
     const defaultPlayers = players
-        .filter((player) => player.office === Office.PGH)
-        .sort((a, b) => a.firstName.localeCompare(b.firstName));
-    const [playersList, setPlayersList] = useState<Player[]>(defaultPlayers);
+        .filter((player) => player.bio.office === Office.PGH)
+        .sort((a, b) => a.bio.firstName.localeCompare(b.bio.firstName));
+    const [playersList, setPlayersList] = useState<NewPlayer[]>(defaultPlayers);
 
     const handleOfficeChange = (office: string) => {
-        let newPlayers = players.sort((a, b) => a.firstName.localeCompare(b.firstName));
+        let newPlayers = players.sort((a, b) => a.bio.firstName.localeCompare(b.bio.firstName));
 
         if (office === Office.PGH || office === Office.DC) {
             newPlayers = players
-                .filter((player) => player.office === office)
-                .sort((a, b) => a.firstName.localeCompare(b.firstName));
+                .filter((player) => player.bio.office === office)
+                .sort((a, b) => a.bio.firstName.localeCompare(b.bio.firstName));
         }
 
         setPlayersList(newPlayers);
@@ -118,9 +118,9 @@ const SubmitSeasonResult: React.FC<SubmitSeasonResultProps> = ({ handleReloadRes
     const getPlayerName = (playerType: string): string => {
         const { playerA, playerB } = resultsData;
         if (playerType === 'A' && !!playerA) {
-            return `${playerA.firstName} ${playerA.lastName}`;
+            return `${playerA.bio.firstName} ${playerA.bio.lastName}`;
         } else if (playerType === 'B' && !!playerB) {
-            return `${playerB.firstName} ${playerB.lastName}`;
+            return `${playerB.bio.firstName} ${playerB.bio.lastName}`;
         }
 
         return '';
@@ -161,7 +161,7 @@ const SubmitSeasonResult: React.FC<SubmitSeasonResultProps> = ({ handleReloadRes
                                 value={player.id}
                                 disabled={getPlayerId('B') === player.id}
                             >
-                                {player.firstName} {player.lastName}
+                                {player.bio.firstName} {player.bio.lastName}
                             </option>
                         ))}
                     </select>
@@ -177,7 +177,7 @@ const SubmitSeasonResult: React.FC<SubmitSeasonResultProps> = ({ handleReloadRes
                                 value={player.id}
                                 disabled={getPlayerId('A') === player.id}
                             >
-                                {player.firstName} {player.lastName}
+                                {player.bio.firstName} {player.bio.lastName}
                             </option>
                         ))}
                     </select>

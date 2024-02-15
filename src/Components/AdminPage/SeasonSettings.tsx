@@ -4,6 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { getSeasonInfo, updateSeasonInfo } from '../../database/settings';
 import { Season } from '../../Types/dataTypes';
 import './SeasonSettings.scss';
+import { resetSeason } from '../../database/players';
 
 const SeasonSettings: React.FC = () => {
     const [seasonDate, setSeasonDate] = useState<Season>({
@@ -48,6 +49,19 @@ const SeasonSettings: React.FC = () => {
         }
     };
 
+    const handleResetSeason = async (): Promise<void> => {
+        const isConfirmed = confirm(
+            'Are you sure you want to reset the season? This action cannot be undone.',
+        );
+
+        if (isConfirmed) {
+            await resetSeason();
+            alert('Season reset successfully.');
+        } else {
+            alert('Season reset canceled.');
+        }
+    };
+
     return (
         <div className="season-settings">
             <div>
@@ -85,7 +99,9 @@ const SeasonSettings: React.FC = () => {
                 </form>
             </div>
 
-            <button className="reset-season">Reset Season</button>
+            <button className="reset-season" onClick={handleResetSeason}>
+                Reset Season
+            </button>
         </div>
     );
 };

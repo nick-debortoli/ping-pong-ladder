@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Player } from '../../Types/dataTypes';
+import { NewPlayer } from '../../Types/dataTypes';
 import './PlayerCard.scss';
 import { calculateWinPercentage, getFlag, getHeadshot } from '../../Utils/playerUtils';
 import { Person } from '@mui/icons-material';
 
 interface PlayerCardProps {
-    player: Player;
+    player: NewPlayer;
 }
 const PlayerCard: React.FC<PlayerCardProps> = ({ player }) => {
     const [headshot, setHeadshot] = useState<string | null>(null);
@@ -36,22 +36,27 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player }) => {
         <div className="player-card">
             <div className="left-column">
                 <div className="name">
-                    <span className="first-name">{player.firstName}</span>
-                    <span className="last-name">{player.lastName}</span>
+                    <span className="first-name">{player.bio.firstName}</span>
+                    <span className="last-name">{player.bio.lastName}</span>
                 </div>
                 {flag && (
                     <div className="country">
-                        <img src={flag} alt={`${player.firstName} ${player.lastName}'s country`} />
+                        <img
+                            src={flag}
+                            alt={`${player.bio.firstName} ${player.bio.lastName}'s country`}
+                        />
                     </div>
                 )}
                 <div className={`rank ${!flag && 'no-country'}`}>
                     <div className="rank-container">
                         <span className="vertical">Overall Rank</span>
-                        <span className="number">{player.overallRanking}</span>
+                        <span className="number">{player.seasonStats.overallRanking}</span>
                     </div>
                     <div className="rank-container">
                         <span className="vertical">Division Rank</span>
-                        <span className="number division-number">{player.divisionRanking}</span>
+                        <span className="number division-number">
+                            {player.seasonStats.divisionRanking}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -60,7 +65,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player }) => {
                     {headshot ? (
                         <img
                             src={headshot}
-                            alt={`${player.firstName} ${player.lastName}'s headshot`}
+                            alt={`${player.bio.firstName} ${player.bio.lastName}'s headshot`}
                         />
                     ) : (
                         <Person className="default-icon" />
@@ -76,9 +81,9 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player }) => {
                         <span>Win Pct: </span>
                     </div>
                     <div className="stat-values">
-                        <span>{player.office}</span>
-                        <span>{player.turnedPro}</span>
-                        <span>{player.playStyle === 'RH' ? 'Right' : 'Left'}</span>
+                        <span>{player.bio.office}</span>
+                        <span>{player.bio.turnedPro}</span>
+                        <span>{player.bio.playStyle === 'RH' ? 'Right' : 'Left'}</span>
                         <span>{calculateWinPercentage(player)}%</span>
                     </div>
                 </div>
