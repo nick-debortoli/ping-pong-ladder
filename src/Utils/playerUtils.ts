@@ -1,7 +1,7 @@
-import { Player } from '../Types/dataTypes';
+import { NewPlayer } from '../Types/dataTypes';
 
-export const getHeadshot = async (player: Player): Promise<string | null> => {
-    const playerFilename = `/assets/headshots/${player.lastName}${player.firstName}.png`;
+export const getHeadshot = async (player: NewPlayer): Promise<string | null> => {
+    const playerFilename = `/assets/headshots/${player.bio.lastName}${player.bio.firstName}.png`;
 
     try {
         const response = await fetch(playerFilename);
@@ -16,8 +16,8 @@ export const getHeadshot = async (player: Player): Promise<string | null> => {
     }
 };
 
-export const getFlag = async (player: Player): Promise<string | null> => {
-    const flagFilename = `/assets/flags/${player.country.toLowerCase()}.png`;
+export const getFlag = async (player: NewPlayer): Promise<string | null> => {
+    const flagFilename = `/assets/flags/${player.bio.country.toLowerCase()}.png`;
 
     try {
         const response = await fetch(flagFilename);
@@ -32,12 +32,12 @@ export const getFlag = async (player: Player): Promise<string | null> => {
     }
 };
 
-export const calculateWinPercentage = (player: Player): number => {
-    const totalMatches = player.wins + player.losses;
+export const calculateWinPercentage = (player: NewPlayer): number => {
+    const totalMatches = player.seasonStats.wins + player.seasonStats.losses;
     if (totalMatches === 0) {
         return 0;
     }
-    return Math.round((player.wins / totalMatches) * 100);
+    return Math.round((player.seasonStats.wins / totalMatches) * 100);
 };
 
 export const isAdmin = (uid: string | undefined): boolean => {

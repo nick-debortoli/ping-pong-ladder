@@ -101,6 +101,8 @@ export const getNextMatchId = (playersCount: number, matchId: number, round: num
 };
 
 export const generateTournamentRounds = (playerIds: string[]): Round => {
+    console.log(playerIds);
+
     const [matchups, startingMatchNumber] = generateTournamentMatchups(playerIds);
     const rounds: { [key: string]: BracketMatch[] } = {};
     rounds['round1'] = matchups;

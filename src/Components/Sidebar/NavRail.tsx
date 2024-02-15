@@ -6,12 +6,16 @@ import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import NavItem from './NavItem';
 
 import { STANDINGS, RESULTS, PLAYERS, TOURNAMENTS } from '../../AppConstants';
+import { useTournaments } from '../../Contexts/TournamentContext';
 
 interface NavRailProp {
     handleClose?: () => void;
 }
 
 const NavRail: React.FC<NavRailProp> = ({ handleClose }) => {
+    const { getActiveTournament } = useTournaments();
+    const activeTournament = getActiveTournament();
+
     return (
         <nav className="side-nav">
             <ul>
@@ -21,11 +25,13 @@ const NavRail: React.FC<NavRailProp> = ({ handleClose }) => {
                     onClick={handleClose}
                 />
                 <NavItem icon={<ReceiptLongIcon />} section={RESULTS} onClick={handleClose} />
-                <NavItem
-                    icon={<AccountTreeOutlinedIcon />}
-                    section={TOURNAMENTS}
-                    onClick={handleClose}
-                />
+                {activeTournament && (
+                    <NavItem
+                        icon={<AccountTreeOutlinedIcon />}
+                        section={TOURNAMENTS}
+                        onClick={handleClose}
+                    />
+                )}
                 <NavItem icon={<Person4OutlinedIcon />} section={PLAYERS} onClick={handleClose} />
             </ul>
             {import.meta.env.VITE_ENVIRONMENT !== 'prod' && (

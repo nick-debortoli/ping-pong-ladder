@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react';
 import { usePlayers } from '../../Contexts/PlayersContext';
-import { BracketMatch, BracketPlayer, Office, Player, Tournament } from '../../Types/dataTypes';
+import { BracketMatch, BracketPlayer, NewPlayer, Office, Tournament } from '../../Types/dataTypes';
 import { getFlag } from '../../Utils/playerUtils';
 
 interface MatchProps {
@@ -17,12 +17,12 @@ const Match: React.FC<MatchProps> = ({ match, tournament, activeOffice }) => {
             return player;
         }
 
-        const playerInfo: Player | null = getPlayerById(player.playerId);
+        const playerInfo: NewPlayer | null = getPlayerById(player.playerId);
 
         if (!playerInfo || !player.seed) return null;
 
         const flag = await getFlag(playerInfo);
-        const { firstName, lastName, country } = playerInfo;
+        const { firstName, lastName, country } = playerInfo.bio;
 
         const showSeed =
             player.seed <=

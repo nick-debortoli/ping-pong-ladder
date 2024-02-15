@@ -48,18 +48,53 @@ const SignUp: React.FC<SignUpProps> = ({ handleChange }) => {
                 const currentYear = currentDate.getFullYear();
                 await signUp(email, defaultPassowrd);
                 await addPlayer({
-                    email,
-                    firstName,
-                    lastName,
-                    office,
-                    playStyle,
-                    country,
-                    elo: BASE_ELO,
-                    wins: 0,
-                    losses: 0,
-                    overallRanking: 0,
-                    divisionRanking: 0,
-                    turnedPro: currentYear,
+                    lifetimeElo: BASE_ELO,
+                    lifetimeWins: 0,
+                    lifetimeLosses: 0,
+                    seasonStats: {
+                        elo: BASE_ELO,
+                        wins: 0,
+                        losses: 0,
+                        divisionRanking: 0,
+                        overallRanking: 0,
+                    },
+                    bio: {
+                        firstName,
+                        lastName,
+                        country,
+                        playStyle,
+                        turnedPro: currentYear,
+                        office,
+                        email,
+                    },
+                    accolades: {
+                        tournamentStats: {
+                            'Ark Open': {
+                                bestFinish: null,
+                                wins: 0,
+                                losses: 0,
+                            },
+                            'DC Open': {
+                                bestFinish: null,
+                                wins: 0,
+                                losses: 0,
+                            },
+                            Govimbledon: {
+                                bestFinish: null,
+                                wins: 0,
+                                losses: 0,
+                            },
+                            'PGH Open': {
+                                bestFinish: null,
+                                wins: 0,
+                                losses: 0,
+                            },
+                        },
+                        overallTitles: 0,
+                        divisionTitles: 0,
+                        bestOverallFinish: null,
+                        bestDivisionalFinish: null,
+                    },
                 });
                 navigate('/home');
             } catch (error) {

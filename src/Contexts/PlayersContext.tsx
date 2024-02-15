@@ -1,14 +1,14 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
-import { Player } from '../Types/dataTypes';
+import { NewPlayer } from '../Types/dataTypes';
 import { firestore } from '../database/firestore';
 import { onSnapshot, collection } from 'firebase/firestore';
 import { getPlayers } from '../database/players';
 
 interface PlayersContextProps {
-    players: Array<Player>;
+    players: Array<NewPlayer>;
     loading: boolean;
-    getPlayerById: (id: string) => Player | null;
-    getTopPlayer: () => Player;
+    getPlayerById: (id: string) => NewPlayer | null;
+    getTopPlayer: () => NewPlayer;
 }
 
 const PlayersContext = createContext<PlayersContextProps | undefined>(undefined);
@@ -18,18 +18,18 @@ interface PlayerProviderProps {
 }
 
 export const PlayersProvider: React.FC<PlayerProviderProps> = ({ children }) => {
-    const [players, setPlayers] = useState<Array<Player>>([]);
+    const [players, setPlayers] = useState<Array<NewPlayer>>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchPlayers = async () => {
-            const playersRef = collection(firestore, 'Players');
+            const playersRef = collection(firestore, 'newPlayers');
 
             const unsubscribe = onSnapshot(
                 playersRef,
                 (snapshot) => {
-                    const playersData: Array<Player> = snapshot.docs.map((doc) => {
-                        const playerData = doc.data() as Omit<Player, 'id'>;
+                    const playersData: Array<NewPlayer> = snapshot.docs.map((doc) => {
+                        const playerData = doc.data() as Omit<NewPlayer, 'id'>;
                         return {
                             id: doc.id,
                             ...playerData,
@@ -63,7 +63,7 @@ export const PlayersProvider: React.FC<PlayerProviderProps> = ({ children }) => 
         fetchPlayers();
     }, []);
 
-    const getPlayerById = (id: string): Player | null => {
+    const getPlayerById = (id: string): NewPlayer | null => {
         const playerById = players.find((player) => player.id === id);
         if (playerById) {
             return playerById;
@@ -71,8 +71,8 @@ export const PlayersProvider: React.FC<PlayerProviderProps> = ({ children }) => 
         return null;
     };
 
-    const getTopPlayer = (): Player => {
-        const topPlayer = players.find((player) => player.overallRanking === 1);
+    const getTopPlayer = (): NewPlayer => {
+        const topPlayer = players.find((player) => player.seasonStats.overallRanking === 1);
         if (topPlayer) {
             return topPlayer;
         }

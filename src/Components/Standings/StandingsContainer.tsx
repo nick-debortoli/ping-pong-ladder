@@ -16,22 +16,24 @@ const StandingsContainer: React.FC = () => {
         const fetchData = async () => {
             const filteredPlayers =
                 focusedOffice !== Office.InterOffice
-                    ? players?.filter((player) => player.office === focusedOffice)
+                    ? players?.filter((player) => player.bio.office === focusedOffice)
                     : players;
 
             const sortedPlayers = filteredPlayers
                 .slice()
-                .sort((playerA, playerB) => playerB.elo - playerA.elo);
+                .sort((playerA, playerB) => playerB.seasonStats.elo - playerA.seasonStats.elo);
 
             const standings: Standing[] = sortedPlayers
-                .filter((player) => player.wins !== 0 || player.losses !== 0)
+                .filter(
+                    (player) => player.seasonStats.wins !== 0 || player.seasonStats.losses !== 0,
+                )
                 .map((player, index) => ({
                     id: player.id,
-                    firstName: player.firstName,
-                    lastName: player.lastName,
-                    wins: player.wins,
-                    losses: player.losses,
-                    elo: player.elo,
+                    firstName: player.bio.firstName,
+                    lastName: player.bio.lastName,
+                    wins: player.seasonStats.wins,
+                    losses: player.seasonStats.losses,
+                    elo: player.seasonStats.elo,
                     rank: index + 1,
                     winningPercentage: calculateWinPercentage(player),
                 }));

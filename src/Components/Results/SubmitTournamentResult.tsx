@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { usePlayers } from '../../Contexts/PlayersContext';
-import { BracketMatch, Office, Player, Result } from '../../Types/dataTypes';
+import { BracketMatch, NewPlayer, Office, Result } from '../../Types/dataTypes';
 import { addTournamentMatch, checkRecentMatches } from '../../database/matches';
 import { useTournaments } from '../../Contexts/TournamentContext';
 import { findMatchAndRoundById } from '../../Utils/tournamentUtils';
@@ -24,7 +24,7 @@ const SubmitTournamentResult: React.FC<SubmitTournamentResultProps> = ({ handleR
 
     const [resultsData, setResultsData] = useState<Result>(defaultResultsData);
     const [isValidResult, setIsValidResult] = useState<boolean>(false);
-    const [players, setPlayers] = useState<Player[]>([]);
+    const [players, setPlayers] = useState<NewPlayer[]>([]);
     const [match, setMatch] = useState<BracketMatch | null>(null);
     const [round, setRound] = useState<string | null>(null);
 
@@ -180,9 +180,9 @@ const SubmitTournamentResult: React.FC<SubmitTournamentResultProps> = ({ handleR
     const getPlayerName = (playerType: string): string => {
         const { playerA, playerB } = resultsData;
         if (playerType === 'A' && !!playerA) {
-            return `${playerA.firstName} ${playerA.lastName}`;
+            return `${playerA.bio.firstName} ${playerA.bio.lastName}`;
         } else if (playerType === 'B' && !!playerB) {
-            return `${playerB.firstName} ${playerB.lastName}`;
+            return `${playerB.bio.firstName} ${playerB.bio.lastName}`;
         }
 
         return '';
@@ -227,7 +227,7 @@ const SubmitTournamentResult: React.FC<SubmitTournamentResultProps> = ({ handleR
                                 value={player.id}
                                 disabled={getPlayerId('B') === player.id}
                             >
-                                {player.firstName} {player.lastName}
+                                {player.bio.firstName} {player.bio.lastName}
                             </option>
                         ))}
                     </select>
@@ -243,7 +243,7 @@ const SubmitTournamentResult: React.FC<SubmitTournamentResultProps> = ({ handleR
                                 value={player.id}
                                 disabled={getPlayerId('A') === player.id}
                             >
-                                {player.firstName} {player.lastName}
+                                {player.bio.firstName} {player.bio.lastName}
                             </option>
                         ))}
                     </select>
