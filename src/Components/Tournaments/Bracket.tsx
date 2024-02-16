@@ -15,20 +15,26 @@ const Bracket: React.FC<BracketProps> = ({ activeOffice }) => {
     const { getPlayerById } = usePlayers();
     const [rounds, setRounds] = useState<any | null>(null);
     const { getActiveTournament } = useTournaments();
-    const activeTournament = getActiveTournament();
 
     const [tournament, setTournament] = useState<Tournament | null>(activeTournament);
 
     useEffect(() => {
         const updateRounds = async () => {
+            const activeTournament = getActiveTournament();
+            setTournament(activeTournament);
+
             try {
-                if (!tournament || !tournament.rounds || !tournament.rounds[activeOffice]) {
-                    const players = tournament?.seeds[activeOffice];
+                if (
+                    !activeTournament ||
+                    !activeTournament.rounds ||
+                    !activeTournament.rounds[activeOffice]
+                ) {
+                    const players = activeTournament?.seeds[activeOffice];
                     const tournamentRounds = generateTournamentRounds(players);
-                    if (tournament?.name) {
+                    if (activeTournament?.name) {
                         await updateTournamentRoundsByName(
                             tournamentRounds,
-                            tournament?.name,
+                            activeTournament?.name,
                             activeOffice,
                         );
                     }
@@ -39,7 +45,7 @@ const Bracket: React.FC<BracketProps> = ({ activeOffice }) => {
                     setRounds(sortedRounds);
                 } else {
                     const sortedRounds = (
-                        Object.entries(tournament.rounds[activeOffice]) as [
+                        Object.entries(activeTournament.rounds[activeOffice]) as [
                             string,
                             BracketMatch[],
                         ][]
@@ -50,7 +56,6 @@ const Bracket: React.FC<BracketProps> = ({ activeOffice }) => {
                 console.error('Error fetching or updating tournament rounds:', error);
             }
         };
-        setTournament(activeTournament);
         updateRounds();
     }, [tournament, activeOffice, getPlayerById]);
 

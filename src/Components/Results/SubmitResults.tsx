@@ -4,6 +4,7 @@ import SubmitSeasonResult from './SubmitSeasonResult';
 import { SUBMISSION } from '../../AppConstants';
 import SubmitTournamentResult from './SubmitTournamentResult';
 import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
+import { useTournaments } from '../../Contexts/TournamentContext';
 interface SubmitResultsProps {
     handleReloadResults: (status: boolean) => void;
 }
@@ -18,15 +19,19 @@ const toggleStyles = {
 
 const SubmitResults: React.FC<SubmitResultsProps> = ({ handleReloadResults }) => {
     const [activeTab, setActiveTab] = useState<SUBMISSION>(SUBMISSION.SEASON);
+    const { getActiveTournament } = useTournaments();
+    const activeTournament = getActiveTournament();
 
     return (
         <div className="submit-results">
-            <ToggleSwitch
-                setTab={setActiveTab}
-                tabOptions={[SUBMISSION.SEASON, SUBMISSION.TOURNAMENT]}
-                style={toggleStyles}
-                width="5em"
-            />
+            {activeTournament && (
+                <ToggleSwitch
+                    setTab={setActiveTab}
+                    tabOptions={[SUBMISSION.SEASON, SUBMISSION.TOURNAMENT]}
+                    style={toggleStyles}
+                    width="5em"
+                />
+            )}
             {activeTab === SUBMISSION.SEASON ? (
                 <SubmitSeasonResult handleReloadResults={handleReloadResults} />
             ) : (

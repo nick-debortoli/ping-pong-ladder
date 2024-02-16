@@ -1,5 +1,5 @@
 import { firestore } from './firestore';
-import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { BracketMatch, Office, Tournament } from '../Types/dataTypes';
 
 export const getTournaments = async (): Promise<Array<Tournament> | null> => {
@@ -76,5 +76,20 @@ export const updateTournamentRoundsByName = async (
     } catch (error) {
         console.error('Error updating tournament rounds: ', error);
         throw error;
+    }
+};
+
+export const findActiveTournament = async (): Promise<Tournament | null> => {
+    const tournamentsRef = collection(firestore, 'Tournaments');
+    const q = query(tournamentsRef, where('isActive', '==', true));
+    const querySnapshot = await getDocs(q);
+
+    // Assuming there is only one active tournament at a time
+    if (!querySnapshot.empty) {
+        return {
+            ...(querySnapshot.docs[0].data() as Tournament),
+        };
+    } else {
+        return null;
     }
 };

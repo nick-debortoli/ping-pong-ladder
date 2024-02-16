@@ -1,0 +1,13 @@
+.season-settings {
+    display: flex;
+    justify-content: space-between;
+    h4 {
+        padding-left: 24px;
+        display: inline-block;
+    }
+    .reset-season {
+        background-color: red;
+        height: 70px;
+        width: 120px;
+    }
+}

@@ -1,4 +1,6 @@
 interface EloReturn {
+    winnerSeasonElo: number;
+    loserSeasonElo: number;
     winnerElo: number;
     loserElo: number;
 }
@@ -11,8 +13,14 @@ const eloFn = (oldElo: number, expected: number, score: number, k = 32): number 
     return oldElo + k * (score - expected);
 };
 
-export const calculateElo = (winnerElo: number, loserElo: number): EloReturn => {
-    const playerElos: EloReturn = { winnerElo, loserElo };
+export const calculateElo = (
+    winnerSeasonElo: number,
+    loserSeasonElo: number,
+    winnerElo: number,
+    loserElo: number,
+): EloReturn => {
+    const playerElos: EloReturn = { winnerSeasonElo, loserSeasonElo, winnerElo, loserElo };
+    // -- Overall
     const expectedWinner = expected(winnerElo, loserElo);
     const expectedLoser = expected(loserElo, winnerElo);
 
@@ -21,6 +29,16 @@ export const calculateElo = (winnerElo: number, loserElo: number): EloReturn => 
 
     playerElos.winnerElo = Math.round(playerElos.winnerElo);
     playerElos.loserElo = Math.round(playerElos.loserElo);
+
+    // -- Season
+    const expectedWinnerSeason = expected(winnerSeasonElo, loserSeasonElo);
+    const expectedLoserSeason = expected(loserSeasonElo, winnerSeasonElo);
+
+    playerElos.winnerSeasonElo = eloFn(winnerSeasonElo, expectedWinnerSeason, 1);
+    playerElos.loserSeasonElo = eloFn(loserSeasonElo, expectedLoserSeason, 0);
+
+    playerElos.winnerSeasonElo = Math.round(playerElos.winnerSeasonElo);
+    playerElos.loserSeasonElo = Math.round(playerElos.loserSeasonElo);
 
     return playerElos;
 };

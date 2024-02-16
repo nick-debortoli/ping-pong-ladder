@@ -34,7 +34,7 @@ const Results: React.FC<ResultsProps> = ({ reloadResults, handleReloadResults })
     const formatPlayerName = (id: string): string => {
         const player = getPlayerById(id);
         if (!player) return '';
-        return `${player.firstName} ${player.lastName}`;
+        return `${player.bio.firstName} ${player.bio.lastName}`;
     };
 
     return (

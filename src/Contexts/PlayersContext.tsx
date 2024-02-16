@@ -1,14 +1,14 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
-import { HeadToHead, Player } from '../Types/dataTypes';
+import { NewPlayer, HeadToHead } from '../Types/dataTypes';
 import { firestore } from '../database/firestore';
 import { onSnapshot, collection, getDocs } from 'firebase/firestore';
 import { getPlayers } from '../database/players';
 
 interface PlayersContextProps {
-    players: Array<Player>;
+    players: Array<NewPlayer>;
     loading: boolean;
-    getPlayerById: (id: string) => Player | null;
-    getTopPlayer: () => Player;
+    getPlayerById: (id: string) => NewPlayer | null;
+    getTopPlayer: () => NewPlayer;
     getH2HByOpponent: (playerId: string, opponentId: string) => HeadToHead | null;
 }
 
@@ -19,24 +19,24 @@ interface PlayerProviderProps {
 }
 
 export const PlayersProvider: React.FC<PlayerProviderProps> = ({ children }) => {
-    const [players, setPlayers] = useState<Array<Player>>([]);
+    const [players, setPlayers] = useState<Array<NewPlayer>>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchPlayers = async () => {
-            const playersRef = collection(firestore, 'Players');
+            const playersRef = collection(firestore, 'newPlayers');
 
             const unsubscribe = onSnapshot(
                 playersRef,
                 async (snapshot) => {
-                    const playersData: Array<Player> = [];
+                    const playersData: Array<NewPlayer> = [];
 
                     for (const doc of snapshot.docs) {
-                        const playerData = doc.data() as Omit<Player, 'id'>;
+                        const playerData = doc.data() as Omit<NewPlayer, 'id'>;
                         const id = doc.id;
 
                         // Fetch head2head data for each player
-                        const head2HeadRef = collection(firestore, `Players/${id}/head2head`);
+                        const head2HeadRef = collection(firestore, `newPlayers/${id}/head2head`);
                         const head2HeadSnapshot = await getDocs(head2HeadRef);
                         const head2HeadData: Record<string, HeadToHead> = {};
                         head2HeadSnapshot.docs.forEach((doc) => {
@@ -78,7 +78,7 @@ export const PlayersProvider: React.FC<PlayerProviderProps> = ({ children }) => 
         fetchPlayers();
     }, []);
 
-    const getPlayerById = (id: string): Player | null => {
+    const getPlayerById = (id: string): NewPlayer | null => {
         const playerById = players.find((player) => player.id === id);
         if (playerById) {
             return playerById;
@@ -86,8 +86,8 @@ export const PlayersProvider: React.FC<PlayerProviderProps> = ({ children }) => 
         return null;
     };
 
-    const getTopPlayer = (): Player => {
-        const topPlayer = players.find((player) => player.overallRanking === 1);
+    const getTopPlayer = (): NewPlayer => {
+        const topPlayer = players.find((player) => player.seasonStats.overallRanking === 1);
         if (topPlayer) {
             return topPlayer;
         }
@@ -97,8 +97,6 @@ export const PlayersProvider: React.FC<PlayerProviderProps> = ({ children }) => 
 
     const getH2HByOpponent = (playerId: string, opponentId: string): HeadToHead | null => {
         const playerData = getPlayerById(playerId);
-        console.log(playerData);
-
         const headToHeadData = playerData?.head2head;
         if (headToHeadData) {
             return headToHeadData[opponentId];

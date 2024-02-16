@@ -1,6 +1,6 @@
 import { Autocomplete, IconButton, TextField, Tooltip, styled } from '@mui/material';
 import { usePlayers } from '../../../Contexts/PlayersContext';
-import { Player } from '../../../Types/dataTypes';
+import { NewPlayer } from '../../../Types/dataTypes';
 import { useState } from 'react';
 import PlayerCard from './PlayerCard';
 import './PlayerBios.scss';
@@ -21,16 +21,18 @@ const StyledAutocomplete = styled(Autocomplete)(() => ({
 
 const PlayerBios: React.FC = () => {
     const { players, getTopPlayer } = usePlayers();
-    const sortedPlayers = players.sort((a, b) => a.firstName.localeCompare(b.firstName));
-    const playerNames = sortedPlayers.map((player) => `${player.firstName} ${player.lastName}`);
-    const [focusedPlayer, setFocusedPlayer] = useState<Player>(getTopPlayer());
+    const sortedPlayers = players.sort((a, b) => a.bio.firstName.localeCompare(b.bio.firstName));
+    const playerNames = sortedPlayers.map(
+        (player) => `${player.bio.firstName} ${player.bio.lastName}`,
+    );
+    const [focusedPlayer, setFocusedPlayer] = useState<NewPlayer>(getTopPlayer());
 
     const handleSearch = (_, newPlayer) => {
-        let nextPlayer: Player = getTopPlayer();
+        let nextPlayer: NewPlayer = getTopPlayer();
         if (newPlayer) {
             const [firstName, lastName] = newPlayer.split(' ');
             const player = players.find((player) => {
-                return player.firstName === firstName && player.lastName === lastName;
+                return player.bio.firstName === firstName && player.bio.lastName === lastName;
             });
             if (player) {
                 nextPlayer = player;
@@ -40,7 +42,7 @@ const PlayerBios: React.FC = () => {
     };
 
     const handleChangePlayer = (isForward: boolean): void => {
-        const currentRank = focusedPlayer.overallRanking;
+        const currentRank = focusedPlayer.seasonStats.overallRanking;
         let newRank = currentRank;
 
         if (isForward) {
@@ -50,7 +52,7 @@ const PlayerBios: React.FC = () => {
         }
 
         const player = players.find((player) => {
-            return player.overallRanking === newRank;
+            return player.seasonStats.overallRanking === newRank;
         });
 
         if (player) {

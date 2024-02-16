@@ -13,7 +13,7 @@ import {
     setDoc,
     orderBy,
 } from 'firebase/firestore';
-import { Player, MatchInfo, Result, BracketMatch, Tournament, Round } from '../Types/dataTypes';
+import { MatchInfo, Result, BracketMatch, Tournament, Round, NewPlayer } from '../Types/dataTypes';
 import { calculateElo } from '../Utils/eloUtils';
 import { isRecentMatch } from '../Utils/matchUtils';
 import { getNextMatchId, getRoundName } from '../Utils/tournamentUtils';
@@ -168,8 +168,8 @@ export const addTournamentMatch = async (
 };
 
 const updateHeadToHead = async (winner, winnerScore, loser, loserScore, matchDocRef) => {
-    const headToHeadWinnerRef = doc(firestore, `Players/${winner.id}/head2head`, loser.id);
-    const headToHeadLoserRef = doc(firestore, `Players/${loser.id}/head2head`, winner.id);
+    const headToHeadWinnerRef = doc(firestore, `newPlayers/${winner.id}/head2head`, loser.id);
+    const headToHeadLoserRef = doc(firestore, `newPlayers/${loser.id}/head2head`, winner.id);
 
     const headToHeadWinnerSnapshot = await getDoc(headToHeadWinnerRef);
     const headToHeadWinnerData = headToHeadWinnerSnapshot.data();
@@ -215,7 +215,6 @@ const updateHeadToHead = async (winner, winnerScore, loser, loserScore, matchDoc
 
 export const addMatch = async (matchInfo: Result): Promise<void> => {
     const { playerA, playerB, playerAScore, playerBScore, office, event } = matchInfo;
-
     if (
         typeof playerA !== 'object' ||
         !playerA?.id ||
@@ -228,7 +227,7 @@ export const addMatch = async (matchInfo: Result): Promise<void> => {
     try {
         const matchesRef = collection(firestore, 'Matches');
         const date = new Date().toISOString();
-        let winner: Player, loser: Player, winnerScore: number, loserScore: number;
+        let winner: NewPlayer, loser: NewPlayer, winnerScore: number, loserScore: number;
 
         if (playerAScore > playerBScore) {
             winner = playerA;
@@ -255,24 +254,33 @@ export const addMatch = async (matchInfo: Result): Promise<void> => {
         // Update head-to-head stats for both players
         await updateHeadToHead(winner, winnerScore, loser, loserScore, matchDocRef);
 
-        const newElos = calculateElo(winner.elo, loser.elo);
+        const newElos = calculateElo(
+            winner.seasonStats.elo,
+            loser.seasonStats.elo,
+            winner.lifetimeElo,
+            loser.lifetimeElo,
+        );
 
         // Update the winner's wins and Elo
-        const winnerRef = doc(firestore, 'Players', winner.id);
+        const winnerRef = doc(firestore, 'newPlayers', winner.id);
         await updateDoc(winnerRef, {
-            wins: increment(1),
-            elo: newElos.winnerElo,
+            'seasonStats.wins': increment(1),
+            'seasonStats.elo': newElos.winnerSeasonElo,
+            lifetimeWins: increment(1),
+            lifetimeElo: newElos.winnerElo,
         });
 
         // Update the loser's losses and Elo
-        const loserRef = doc(firestore, 'Players', loser.id);
+        const loserRef = doc(firestore, 'newPlayers', loser.id);
         await updateDoc(loserRef, {
-            losses: increment(1),
-            elo: newElos.loserElo,
+            'seasonStats.losses': increment(1),
+            'seasonStats.elo': newElos.loserSeasonElo,
+            lifetimeLosses: increment(1),
+            lifetimeElo: newElos.loserElo,
         });
 
         // Update division rankings for the player offices
-        await updateDivisionRankings(winner.office, loser.office);
+        await updateDivisionRankings(winner.bio.office, loser.bio.office);
 
         // Update overall rankings for all players
         await updateOverallRankings();
@@ -284,15 +292,15 @@ export const addMatch = async (matchInfo: Result): Promise<void> => {
 export const checkRecentMatches = async (resultsData: Result): Promise<boolean> => {
     const { playerA, playerB, playerAScore, playerBScore } = resultsData;
 
-    let winner: Player, loser: Player, winnerScore: number, loserScore: number;
+    let winner: NewPlayer, loser: NewPlayer, winnerScore: number, loserScore: number;
     if (playerAScore > playerBScore) {
-        winner = playerA as Player;
-        loser = playerB as Player;
+        winner = playerA as NewPlayer;
+        loser = playerB as NewPlayer;
         winnerScore = playerAScore;
         loserScore = playerBScore;
     } else {
-        winner = playerB as Player;
-        loser = playerA as Player;
+        winner = playerB as NewPlayer;
+        loser = playerA as NewPlayer;
         winnerScore = playerBScore;
         loserScore = playerAScore;
     }

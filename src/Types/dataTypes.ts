@@ -20,34 +20,41 @@ interface PlayerStats {
     elo: number;
     wins: number;
     losses: number;
+    divisionRanking: number;
+    overallRanking: number;
 }
 
-type BestFinish = {
+export type BestFinish = {
     round: string;
     years: number[];
 };
 
-interface TournamentStats {
+export interface TournamentStats {
     bestFinish: BestFinish | null;
     wins: number;
     losses: number;
 }
 
-interface Accolades {
+export interface Accolades {
     tournamentStats: Record<TournamentNames, TournamentStats>;
     overallTitles: number;
     divisionTitles: number;
-    bestOverallinish: number | null;
+    bestOverallFinish: number | null;
     bestDivisionalFinish: number | null;
 }
 
-export interface NewPlayer extends PlayerStats {
+export interface NewBasePlayer {
     seasonStats: PlayerStats;
-    overallRanking: number;
-    divisionRanking: number;
     bio: PlayerBio;
     head2head?: Record<string, HeadToHead>;
     accolades: Accolades;
+    lifetimeWins: number;
+    lifetimeLosses: number;
+    lifetimeElo: number;
+}
+
+export interface NewPlayer extends NewBasePlayer {
+    id: string;
 }
 
 export interface BasePlayer {
@@ -70,17 +77,13 @@ export interface Player extends BasePlayer {
     id: string;
 }
 
-export interface Standing
-    extends Omit<
-        Player,
-        | 'email'
-        | 'office'
-        | 'overallRanking'
-        | 'divisionRanking'
-        | 'country'
-        | 'playStyle'
-        | 'turnedPro'
-    > {
+export interface Standing {
+    id: string;
+    firstName: string;
+    lastName: string;
+    wins: number;
+    losses: number;
+    elo: number;
     rank: number;
     winningPercentage: number;
 }
@@ -98,8 +101,8 @@ export enum Office {
 }
 
 export interface Result {
-    playerA: Player | '' | null;
-    playerB: Player | '' | null;
+    playerA: NewPlayer | '' | null;
+    playerB: NewPlayer | '' | null;
     playerAScore: number;
     playerBScore: number;
     office: Office;

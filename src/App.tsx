@@ -23,7 +23,7 @@ const App: React.FC = () => {
         return () => {
             unsubscribe();
         };
-    });
+    }, []);
     return (
         <div id="app" className="app">
             <PlayersProvider>
