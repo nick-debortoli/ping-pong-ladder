@@ -32,8 +32,17 @@ export const getFlag = async (player: NewPlayer): Promise<string | null> => {
     }
 };
 
-export const calculateWinPercentage = (player: NewPlayer): number => {
+export const calculateWinPercentage = (player: NewPlayer, allTime: boolean = false): number => {
+    if (allTime) {
+        const totalMatches = player.lifetimeWins + player.lifetimeLosses;
+
+        if (totalMatches === 0) {
+            return 0;
+        }
+        return Math.round((player.lifetimeWins / totalMatches) * 100);
+    }
     const totalMatches = player.seasonStats.wins + player.seasonStats.losses;
+
     if (totalMatches === 0) {
         return 0;
     }

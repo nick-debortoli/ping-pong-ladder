@@ -30,7 +30,6 @@ export const addPlayer = async (playerInfo: NewBasePlayer): Promise<void> => {
         }
 
         await addDoc(playersRef, playerInfo);
-
         await updateDivisionRankings(playerInfo.bio.office);
         await updateOverallRankings();
     } catch (error) {

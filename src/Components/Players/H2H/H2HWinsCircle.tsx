@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { ReactElement, useEffect, useMemo, useRef, useState } from 'react';
 import { HeadToHead } from '../../../Types/dataTypes';
 import * as d3 from 'd3';
 import './H2HWinsCircle.scss';
@@ -81,10 +81,24 @@ const drawPieChart = (winsData: PieWinsData[], svgRef: SVGSVGElement, size: numb
 };
 
 const H2HWinsCircle: React.FC<H2HWinsCircleProps> = ({ headToHead, hasBothPlayers }) => {
-    const [debouncedText, setDebouncedText] = useState<string>('');
+    const [debouncedText, setDebouncedText] = useState<ReactElement | string>('');
     const pieChartRef = useRef<SVGSVGElement | null>(null);
     const resizing = useRef<boolean>(false);
-    const textToShow = hasBothPlayers ? (headToHead ? 'VS Wins' : 'No Matches') : '';
+    const textToShow: ReactElement | string = useMemo(() => {
+        if (hasBothPlayers) {
+            if (headToHead) {
+                return (
+                    <>
+                        <span>VS</span>
+                        <span>Wins</span>
+                    </>
+                );
+            } else {
+                return 'No Matches';
+            }
+        }
+        return '';
+    }, [hasBothPlayers, headToHead]);
 
     useEffect(() => {
         const redraw = () => {

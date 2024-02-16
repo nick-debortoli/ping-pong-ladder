@@ -104,13 +104,32 @@ export async function migratePlayers() {
 }
 
 async function updateRankings(players: NewPlayer[], rankingField: string): Promise<void> {
-    players.sort((a, b) => b.seasonStats.elo - a.seasonStats.elo);
-    for (let i = 0; i < players.length; i++) {
-        const player = players[i];
+    const rankedPlayers = players.filter(
+        (player) => player.seasonStats.wins > 0 || player.seasonStats.losses > 0,
+    );
+
+    rankedPlayers.sort((a, b) => b.seasonStats.elo - a.seasonStats.elo);
+    for (let i = 0; i < rankedPlayers.length; i++) {
+        const player = rankedPlayers[i];
+
         if (player.id) {
             const playerRef = doc(firestore, 'newPlayers', player.id);
             const updateData = {
                 [`seasonStats.${rankingField}`]: i + 1,
+            };
+            await updateDoc(playerRef, updateData);
+        }
+    }
+
+    const excludedPlayers = players.filter(
+        (player) => player.seasonStats.wins === 0 && player.seasonStats.losses === 0,
+    );
+
+    for (const player of excludedPlayers) {
+        if (player.id) {
+            const playerRef = doc(firestore, 'newPlayers', player.id);
+            const updateData = {
+                [`seasonStats.${rankingField}`]: 0,
             };
             await updateDoc(playerRef, updateData);
         }
@@ -132,7 +151,7 @@ export const updateDivisionRankings = async (
         const office = offices[i];
         const officePlayersQuery = query(
             collection(firestore, 'newPlayers'),
-            where('office', '==', office),
+            where('bio.office', '==', office),
         );
         const officePlayersSnapshot = await getDocs(officePlayersQuery);
         const officePlayers = officePlayersSnapshot.docs.map((doc) => ({

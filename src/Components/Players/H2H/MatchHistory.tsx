@@ -35,6 +35,7 @@ const MatchHistory: React.FC<MatchHistoryProps> = ({ headToHead }) => {
                     {matches.map((match, index) => (
                         <MatchHistoryRow key={`match-${index}`} match={match} />
                     ))}
+                    <br />
                 </>
             )}
         </div>

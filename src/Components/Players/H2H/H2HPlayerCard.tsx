@@ -54,7 +54,7 @@ const H2HPlayerCard: React.FC<H2HPlayerCardProps> = ({ playerId, isFirstCard, is
                                 <span>{player.accolades.divisionTitles}</span>
                             </div>
                             <div className="h2h-row">
-                                <span className="h2h-label">Overall Titles</span>
+                                <span className="h2h-label">Season Titles</span>
                                 <span>{player.accolades.overallTitles}</span>
                             </div>
                             <div className="h2h-row">
