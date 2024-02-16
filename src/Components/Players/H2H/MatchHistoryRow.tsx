@@ -13,7 +13,7 @@ const MatchHistoryRow: React.FC<MatchHistoryRowProps> = ({ match }) => {
     return (
         <div className="match-history-row">
             <div className="match-history-cell">{formatDateToString(date)}</div>
-            <div className="match-history-cell">{`${winner?.firstName} ${winner?.lastName}`}</div>
+            <div className="match-history-cell">{`${winner?.bio.firstName} ${winner?.bio.lastName}`}</div>
             <div className="match-history-cell">{event || 'Regular Season'}</div>
             <div className="match-history-cell">{`${winnerScore}-${loserScore}`}</div>
         </div>

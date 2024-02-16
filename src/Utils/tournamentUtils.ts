@@ -4,6 +4,7 @@ import {
     Tournament,
     TournamentNameToImage,
     TournamentNames,
+    TournamentStats,
 } from '../Types/dataTypes';
 
 const generateSeeds = (order: number): (number | null)[] => {
@@ -227,4 +228,35 @@ export const findMatchAndRoundById = (
     }
 
     return highestMatch;
+};
+
+export const getTotalTitlesWon = (
+    tournamentStats: Record<TournamentNames, TournamentStats>,
+): number => {
+    let totalTitles = 0;
+
+    Object.values(tournamentStats).forEach((stats) => {
+        if (stats.bestFinish && stats.bestFinish.round === 'Win') {
+            totalTitles += stats.bestFinish.years.length;
+        }
+    });
+
+    return totalTitles;
+};
+
+export const tournamentLongToShorthand = (round: string | undefined): string => {
+    if (!round) {
+        return 'N/A';
+    }
+
+    switch (round) {
+        case 'Finals':
+            return 'F';
+        case 'Semifinals':
+            return 'SF';
+        case 'Quarterfinals':
+            return 'QF';
+        default:
+            return `R${round.split(' ')[1]}`;
+    }
 };

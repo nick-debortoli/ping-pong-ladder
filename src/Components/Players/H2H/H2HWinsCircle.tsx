@@ -84,7 +84,7 @@ const H2HWinsCircle: React.FC<H2HWinsCircleProps> = ({ headToHead, hasBothPlayer
     const [debouncedText, setDebouncedText] = useState<string>('');
     const pieChartRef = useRef<SVGSVGElement | null>(null);
     const resizing = useRef<boolean>(false);
-    const textToShow = hasBothPlayers ? (headToHead ? 'VS' : 'No Matches') : '';
+    const textToShow = hasBothPlayers ? (headToHead ? 'VS Wins' : 'No Matches') : '';
 
     useEffect(() => {
         const redraw = () => {

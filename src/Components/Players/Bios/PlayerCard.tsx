@@ -3,6 +3,7 @@ import { NewPlayer } from '../../../Types/dataTypes';
 import './PlayerCard.scss';
 import { calculateWinPercentage, getFlag, getHeadshot } from '../../../Utils/playerUtils';
 import { Person } from '@mui/icons-material';
+import { tournamentLongToShorthand } from '../../../Utils/tournamentUtils';
 
 interface PlayerCardProps {
     player: NewPlayer;
@@ -31,6 +32,12 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player }) => {
                 setFlag(null);
             });
     }, [player]);
+
+    const { tournamentStats } = player.accolades;
+    const arkBestFinish = tournamentStats['Ark Open'].bestFinish;
+    const govimbledonBestFinish = tournamentStats['Govimbledon'].bestFinish;
+    const dcBestFinish = tournamentStats['DC Open'].bestFinish;
+    const pghBestFinish = tournamentStats['PGH Open'].bestFinish;
 
     return (
         <div className="player-card">
@@ -85,6 +92,40 @@ const PlayerCard: React.FC<PlayerCardProps> = ({ player }) => {
                         <span>{player.bio.turnedPro}</span>
                         <span>{player.bio.playStyle === 'RH' ? 'Right' : 'Left'}</span>
                         <span>{calculateWinPercentage(player)}%</span>
+                    </div>
+                </div>
+                <div className="stats">
+                    <div className="stat-labels">
+                        <span>Ark Open: </span>
+                        <span>Govimbledon: </span>
+                        <span>DC Open: </span>
+                        <span>PGH Open: </span>
+                    </div>
+                    <div className="stat-values">
+                        <span>
+                            {tournamentLongToShorthand(arkBestFinish?.round)}
+                            <span className="tourney-years">{`${arkBestFinish?.years.join(
+                                ',',
+                            )}`}</span>
+                        </span>
+                        <span>
+                            {tournamentLongToShorthand(govimbledonBestFinish?.round)}
+                            <span className="tourney-years">{`${
+                                govimbledonBestFinish?.years.join(',') || ''
+                            }`}</span>
+                        </span>
+                        <span>
+                            {tournamentLongToShorthand(dcBestFinish?.round)}
+                            <span className="tourney-years">{`${
+                                dcBestFinish?.years.join(',') || ''
+                            }`}</span>
+                        </span>
+                        <span>
+                            {tournamentLongToShorthand(pghBestFinish?.round)}
+                            <span className="tourney-years">{`${
+                                pghBestFinish?.years.join(',') || ''
+                            }`}</span>
+                        </span>
                     </div>
                 </div>
             </div>

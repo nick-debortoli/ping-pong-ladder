@@ -32,8 +32,10 @@ const StyledAutocomplete = styled(Autocomplete)(() => ({
 
 const Head2Head: React.FC = () => {
     const { players, getPlayerById, getH2HByOpponent } = usePlayers();
-    const sortedPlayers = players.sort((a, b) => a.firstName.localeCompare(b.firstName));
-    const playerNames = sortedPlayers.map((player) => `${player.firstName} ${player.lastName}`);
+    const sortedPlayers = players.sort((a, b) => a.bio.firstName.localeCompare(b.bio.firstName));
+    const playerNames = sortedPlayers.map(
+        (player) => `${player.bio.firstName} ${player.bio.lastName}`,
+    );
 
     const [selectedPlayers, setSelectedPlayers] = useState<H2HPlayers>([null, null]);
     const [headToHead, setHeadToHead] = useState<HeadToHead | null>(null);
@@ -48,7 +50,8 @@ const Head2Head: React.FC = () => {
             const [firstName, lastName] = name.split(' ');
             return (
                 players.find(
-                    (player) => player.firstName === firstName && player.lastName === lastName,
+                    (player) =>
+                        player.bio.firstName === firstName && player.bio.lastName === lastName,
                 ) || null
             );
         });
@@ -83,7 +86,7 @@ const Head2Head: React.FC = () => {
                     value={selectedPlayers.filter(Boolean).map((playerId) => {
                         const player = playerId && getPlayerById(playerId);
                         if (player) {
-                            return `${player.firstName} ${player.lastName}`;
+                            return `${player.bio.firstName} ${player.bio.lastName}`;
                         }
                     })}
                     onChange={handlePlayerChange}
