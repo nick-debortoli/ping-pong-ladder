@@ -250,6 +250,8 @@ export const tournamentLongToShorthand = (round: string | undefined): string => 
     }
 
     switch (round) {
+        case 'Win':
+            return 'W';
         case 'Finals':
             return 'F';
         case 'Semifinals':
