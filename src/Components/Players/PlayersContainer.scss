@@ -4,4 +4,13 @@
     width: 100%;
     padding: 2.5%;
     box-sizing: border-box;
+
+    .players-top-bar {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        top: 5vh;
+        right: 2vw;
+        z-index: 100;
+    }
 }

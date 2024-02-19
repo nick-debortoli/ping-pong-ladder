@@ -1,12 +1,13 @@
+import React, { useState, useEffect } from 'react';
 import { Autocomplete, IconButton, TextField, Tooltip, styled } from '@mui/material';
-import { usePlayers } from '../../Contexts/PlayersContext';
-import { NewPlayer } from '../../Types/dataTypes';
-import { useState } from 'react';
+import { usePlayers } from '../../../Contexts/PlayersContext';
+import { NewPlayer } from '../../../Types/dataTypes';
 import PlayerCard from './PlayerCard';
-import './PlayerBios.scss';
 import { ArrowLeft, ArrowRight } from '@mui/icons-material';
+import './PlayerBios.scss';
 
 const darkText = '#d6d6d6';
+
 const StyledAutocomplete = styled(Autocomplete)(() => ({
     input: {
         color: `${darkText}`,
@@ -14,50 +15,54 @@ const StyledAutocomplete = styled(Autocomplete)(() => ({
             color: `${darkText}`,
         },
         '&:focus': {
-            fieldset: `${darkText}`,
+            borderColor: `${darkText}`,
         },
     },
 }));
 
 const PlayerBios: React.FC = () => {
     const { players, getTopPlayer } = usePlayers();
-    const sortedPlayers = players.sort((a, b) => a.bio.firstName.localeCompare(b.bio.firstName));
+
+    const sortedPlayers = players.sort((a, b) => {
+        if (a.seasonStats.overallRanking === 0 && b.seasonStats.overallRanking === 0) {
+            return a.bio.lastName.localeCompare(b.bio.lastName);
+        } else if (a.seasonStats.overallRanking === 0) {
+            return 1;
+        } else if (b.seasonStats.overallRanking === 0) {
+            return -1;
+        }
+        return a.seasonStats.overallRanking - b.seasonStats.overallRanking; // By ranking
+    });
+
     const playerNames = sortedPlayers.map(
         (player) => `${player.bio.firstName} ${player.bio.lastName}`,
     );
-    const [focusedPlayer, setFocusedPlayer] = useState<NewPlayer>(getTopPlayer());
+    const [focusedPlayer, setFocusedPlayer] = useState<NewPlayer>(sortedPlayers[0]);
+
+    useEffect(() => {
+        const topPlayer = getTopPlayer();
+        setFocusedPlayer(topPlayer);
+    }, [players, getTopPlayer]);
 
     const handleSearch = (_, newPlayer) => {
-        let nextPlayer: NewPlayer = getTopPlayer();
         if (newPlayer) {
             const [firstName, lastName] = newPlayer.split(' ');
-            const player = players.find((player) => {
-                return player.bio.firstName === firstName && player.bio.lastName === lastName;
-            });
+            const player = sortedPlayers.find(
+                (player) => player.bio.firstName === firstName && player.bio.lastName === lastName,
+            );
             if (player) {
-                nextPlayer = player;
+                setFocusedPlayer(player);
             }
         }
-        setFocusedPlayer(nextPlayer);
     };
 
     const handleChangePlayer = (isForward: boolean): void => {
-        const currentRank = focusedPlayer.seasonStats.overallRanking;
-        let newRank = currentRank;
+        const currentIndex = sortedPlayers.findIndex((player) => player.id === focusedPlayer.id);
+        let newIndex = isForward ? currentIndex + 1 : currentIndex - 1;
 
-        if (isForward) {
-            newRank = currentRank + 1;
-        } else {
-            newRank = currentRank - 1;
-        }
+        newIndex = Math.max(0, Math.min(sortedPlayers.length - 1, newIndex));
 
-        const player = players.find((player) => {
-            return player.seasonStats.overallRanking === newRank;
-        });
-
-        if (player) {
-            setFocusedPlayer(player);
-        }
+        setFocusedPlayer(sortedPlayers[newIndex]);
     };
 
     return (

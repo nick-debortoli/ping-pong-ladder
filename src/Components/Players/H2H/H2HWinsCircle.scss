@@ -1,0 +1,55 @@
+@import '../../../Themes/variables';
+.h2h-wins-circle-container {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 30vmin;
+    width: 40vmin;
+
+    .wins-count {
+        position: absolute;
+        top: 50%;
+        font-size: 3em;
+
+        &.right {
+            right: 0;
+            transform: translate(50%, -50%);
+        }
+
+        &.left {
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    #h2h-pie-chart {
+        z-index: 90;
+    }
+
+    #h2h-pie-chart,
+    .h2h-wins-circle {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .h2h-wins-circle {
+        height: 30vmin;
+        width: 30vmin;
+
+        .center-label {
+            font-size: 2em;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            &.no-matches {
+                color: $sidebar-border;
+            }
+        }
+    }
+}

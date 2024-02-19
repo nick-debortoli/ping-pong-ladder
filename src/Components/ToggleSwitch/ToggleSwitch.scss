@@ -1,6 +1,6 @@
 @import '../../Themes/variables';
 
-.office-toggle {
+.toggle-switch {
     display: flex;
 
     .toggle-btn {
@@ -18,11 +18,11 @@
             background-color: $govini-orange;
         }
 
-        &.pgh {
+        &.left {
             border-radius: 6px 0 0 6px;
         }
 
-        &.dc {
+        &.right {
             border-radius: 0 6px 6px 0;
         }
 

@@ -3,10 +3,19 @@ import './SubmitResults.scss';
 import SubmitSeasonResult from './SubmitSeasonResult';
 import { SUBMISSION } from '../../AppConstants';
 import SubmitTournamentResult from './SubmitTournamentResult';
+import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
 import { useTournaments } from '../../Contexts/TournamentContext';
 interface SubmitResultsProps {
     handleReloadResults: (status: boolean) => void;
 }
+
+const toggleStyles = {
+    position: 'absolute',
+    fontSize: '0.85em',
+    top: '44px',
+    right: '12px',
+    display: 'flex',
+};
 
 const SubmitResults: React.FC<SubmitResultsProps> = ({ handleReloadResults }) => {
     const [activeTab, setActiveTab] = useState<SUBMISSION>(SUBMISSION.SEASON);
@@ -16,24 +25,12 @@ const SubmitResults: React.FC<SubmitResultsProps> = ({ handleReloadResults }) =>
     return (
         <div className="submit-results">
             {activeTournament && (
-                <div className="tabs">
-                    <button
-                        className={`results-toggle-btn left-toggle ${
-                            activeTab === SUBMISSION.SEASON ? 'active' : ''
-                        }`}
-                        onClick={() => setActiveTab(SUBMISSION.SEASON)}
-                    >
-                        Season
-                    </button>
-                    <button
-                        className={`results-toggle-btn right-toggle ${
-                            activeTab === SUBMISSION.TOURNAMENT ? 'active' : ''
-                        }`}
-                        onClick={() => setActiveTab(SUBMISSION.TOURNAMENT)}
-                    >
-                        Tournament
-                    </button>
-                </div>
+                <ToggleSwitch
+                    setTab={setActiveTab}
+                    tabOptions={[SUBMISSION.SEASON, SUBMISSION.TOURNAMENT]}
+                    style={toggleStyles}
+                    width="5em"
+                />
             )}
             {activeTab === SUBMISSION.SEASON ? (
                 <SubmitSeasonResult handleReloadResults={handleReloadResults} />

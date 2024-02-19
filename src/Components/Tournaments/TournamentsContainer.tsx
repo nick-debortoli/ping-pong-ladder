@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Office, Tournament } from '../../Types/dataTypes';
 import Bracket from './Bracket';
-import OfficeToggle from '../OfficeToggle/OfficeToggle';
+import ToggleSwitch from '../ToggleSwitch/ToggleSwitch';
 import './TournamentsContainer.scss';
 import { getTournamentLogo } from '../../Utils/tournamentUtils';
 import { useTournaments } from '../../Contexts/TournamentContext';
@@ -32,10 +32,6 @@ const TournamentsContainer: React.FC = () => {
 
         fetchData();
     }, []);
-
-    const handleOfficeClick = (office: Office): void => {
-        setActiveOffice(office);
-    };
 
     const rules = (
         <>
@@ -90,7 +86,11 @@ const TournamentsContainer: React.FC = () => {
                                 <InfoOutlinedIcon sx={{ cursor: 'pointers' }} />
                             </Tooltip>
                         </h3>
-                        <OfficeToggle onOfficeClick={handleOfficeClick} hasBorder={true} />
+                        <ToggleSwitch
+                            setTab={setActiveOffice}
+                            tabOptions={[Office.PGH, Office.DC]}
+                            hasBorder={true}
+                        />
                     </div>
 
                     <Bracket activeOffice={activeOffice} />

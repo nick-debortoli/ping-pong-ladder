@@ -1,0 +1,26 @@
+@import '../../../Themes/variables';
+
+.h2h {
+    position: absolute;
+    height: 95%;
+    width: 95%;
+    box-sizing: border-box;
+
+    .h2h-tools {
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .h2h-cards-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 80% auto;
+        height: calc(90% - 24px);
+        overflow: auto;
+        border: 1px solid $sidebar-border;
+        border-radius: 4px;
+        position: relative;
+    }
+}

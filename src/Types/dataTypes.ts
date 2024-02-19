@@ -127,8 +127,8 @@ export interface BugSubmission {
 }
 
 export enum PlayerTabs {
-    BIOS = 'bios',
-    H2H = 'h2h',
+    BIOS = 'Bios',
+    H2H = 'H2H',
 }
 
 export interface Season {
