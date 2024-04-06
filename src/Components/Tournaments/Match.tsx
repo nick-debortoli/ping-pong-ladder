@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { usePlayers } from '../../Contexts/PlayersContext';
 import { BracketMatch, BracketPlayer, NewPlayer, Office, Tournament } from '../../Types/dataTypes';
 import { getFlag } from '../../Utils/playerUtils';
+import { isThirdPlaceMatch } from '../../Utils/tournamentUtils';
 
 interface MatchProps {
     match: BracketMatch;
@@ -10,7 +11,8 @@ interface MatchProps {
 }
 const Match: React.FC<MatchProps> = ({ match, tournament, activeOffice }) => {
     const { getPlayerById } = usePlayers();
-    const { player1, player2, scores1, scores2, winner } = match;
+    const { matchId, player1, player2, scores1, scores2, winner } = match;
+    const isThirdPlace = isThirdPlaceMatch(tournament, activeOffice, matchId || 0);
 
     const getPlayerInfo = async (player: BracketPlayer | 'Bye' | null) => {
         if (!player || player === 'Bye') {
@@ -74,32 +76,39 @@ const Match: React.FC<MatchProps> = ({ match, tournament, activeOffice }) => {
     };
 
     return (
-        <div className="match">
-            <div className="players">
-                <span className={`player ${getPlayerClass(player1)}`}>{player1Info}</span>
-                <span className={`player ${getPlayerClass(player2)}`}>{player2Info}</span>
-            </div>
-            <div className="scores-container">
-                <div className="scores top-score">
-                    {scores1?.map((score, index) => (
-                        <span
-                            key={`score1-${index}`}
-                            className={`score ${scores2 && scores2[index] > score && 'low-score'}`}
-                        >
-                            {score}
-                        </span>
-                    ))}
+        <div className={`match-container ${isThirdPlace ? 'third-place' : ''}`}>
+            {isThirdPlace && <span>Third Place Match</span>}
+            <div className="match">
+                <div className="players">
+                    <span className={`player ${getPlayerClass(player1)}`}>{player1Info}</span>
+                    <span className={`player ${getPlayerClass(player2)}`}>{player2Info}</span>
                 </div>
-                <div className="scores">
-                    {' '}
-                    {scores2?.map((score, index) => (
-                        <span
-                            key={`score2-${index}`}
-                            className={`score ${scores1 && scores1[index] > score && 'low-score'}`}
-                        >
-                            {score}
-                        </span>
-                    ))}
+                <div className="scores-container">
+                    <div className="scores top-score">
+                        {scores1?.map((score, index) => (
+                            <span
+                                key={`score1-${index}`}
+                                className={`score ${
+                                    scores2 && scores2[index] > score && 'low-score'
+                                }`}
+                            >
+                                {score}
+                            </span>
+                        ))}
+                    </div>
+                    <div className="scores">
+                        {' '}
+                        {scores2?.map((score, index) => (
+                            <span
+                                key={`score2-${index}`}
+                                className={`score ${
+                                    scores1 && scores1[index] > score && 'low-score'
+                                }`}
+                            >
+                                {score}
+                            </span>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

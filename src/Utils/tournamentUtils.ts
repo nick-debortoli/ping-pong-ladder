@@ -1,5 +1,7 @@
 import {
     BracketMatch,
+    NewPlayer,
+    Office,
     Round,
     Tournament,
     TournamentNameToImage,
@@ -102,8 +104,6 @@ export const getNextMatchId = (playersCount: number, matchId: number, round: num
 };
 
 export const generateTournamentRounds = (playerIds: string[]): Round => {
-    console.log(playerIds);
-
     const [matchups, startingMatchNumber] = generateTournamentMatchups(playerIds);
     const rounds: { [key: string]: BracketMatch[] } = {};
     rounds['round1'] = matchups;
@@ -117,6 +117,10 @@ export const generateTournamentRounds = (playerIds: string[]): Round => {
         const emptyRound: BracketMatch[] = Array(matchups.length / 2 ** roundNumber)
             .fill(null)
             .map(() => ({ matchId: matchNumber++, player1: null, player2: null }));
+
+        if (roundNumber === numberOfRounds) {
+            emptyRound.push({ matchId: matchNumber++, player1: null, player2: null });
+        }
 
         rounds[currentRoundKey].forEach((match) => {
             if (match.player1 === 'Bye') {
@@ -261,4 +265,47 @@ export const tournamentLongToShorthand = (round: string | undefined): string => 
         default:
             return `R${round.split(' ')[1]}`;
     }
+};
+
+export const countMatchesByTournamentAndOffice = (
+    tournament: Tournament,
+    office: Office,
+): number => {
+    let totalMatches = 0;
+
+    const rounds: Round | undefined = tournament.rounds[office];
+    if (rounds) {
+        Object.values(rounds).forEach((matches: BracketMatch[]) => {
+            totalMatches += matches.length;
+        });
+    }
+
+    return totalMatches;
+};
+
+export const isThirdPlaceMatch = (
+    tournament: Tournament,
+    office: Office,
+    matchId: number,
+): boolean => {
+    const matchCount = countMatchesByTournamentAndOffice(tournament, office);
+    return matchId === matchCount;
+};
+
+export const isPlayerInThirdPlaceMatch = (
+    player: NewPlayer | undefined,
+    tournament: Tournament | null,
+    office: Office | undefined,
+): boolean => {
+    if (!player || !office) return false;
+    const allMatches = Object.values(tournament?.rounds[office] || {}).flat();
+
+    return allMatches.some((match) => {
+        const typedMatch = match as BracketMatch;
+        const isPlayerInMatch =
+            (typedMatch.player1 !== 'Bye' && typedMatch.player1?.playerId === player.id) ||
+            (typedMatch.player2 !== 'Bye' && typedMatch.player2?.playerId === player.id);
+        const isMatchIdForThirdPlace = typedMatch.matchId === allMatches.length;
+        return isPlayerInMatch && isMatchIdForThirdPlace;
+    });
 };
