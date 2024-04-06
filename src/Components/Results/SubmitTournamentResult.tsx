@@ -3,7 +3,7 @@ import { usePlayers } from '../../Contexts/PlayersContext';
 import { BracketMatch, NewPlayer, Office, Result } from '../../Types/dataTypes';
 import { addTournamentMatch, checkRecentMatches } from '../../database/matches';
 import { useTournaments } from '../../Contexts/TournamentContext';
-import { findMatchAndRoundById } from '../../Utils/tournamentUtils';
+import { findMatchAndRoundById, isPlayerInThirdPlaceMatch } from '../../Utils/tournamentUtils';
 
 interface SubmitTournamentResultProps {
     handleReloadResults: (status: boolean) => void;
@@ -38,6 +38,7 @@ const SubmitTournamentResult: React.FC<SubmitTournamentResultProps> = ({ handleR
             .filter((player) => {
                 const hasLostMatch = allMatches.some((match) => {
                     const typedMatch = match as BracketMatch;
+
                     return (
                         ((typedMatch.player1 !== 'Bye' &&
                             typedMatch.player1?.playerId === player.id) ||
@@ -48,7 +49,10 @@ const SubmitTournamentResult: React.FC<SubmitTournamentResultProps> = ({ handleR
                     );
                 });
 
-                return !hasLostMatch;
+                return (
+                    !hasLostMatch ||
+                    isPlayerInThirdPlaceMatch(player, activeTournament, resultsData.office)
+                );
             });
         setPlayers(playerList);
         setResultsData({ ...resultsData, event: activeTournament?.name || '' });

@@ -115,6 +115,7 @@ const roundNameIsBetterThan = (
 
     return newRoundSignificance > currentBestRoundSignificance;
 };
+
 const calculatePlayerAccoladesInTournament = async (
     playerId: string,
     currentStats: Record<TournamentNames, TournamentStats>,
@@ -129,6 +130,31 @@ const calculatePlayerAccoladesInTournament = async (
     let wins = 0;
     let losses = 0;
     let bestFinish: BestFinish | null = currentStats[activeTournament.name]?.bestFinish || null;
+
+    // -- DO ACCOLADES FOR THIRD PLACE FINISH
+    // const players = await getPlayers();
+    // const player = players?.filter((player) => player.id === playerId)[0];
+    // const isInThird = isPlayerInThirdPlaceMatch(
+    //     player,
+    //     activeTournament,
+    //     player?.bio.office as Office,
+    // );
+    // const thirdPlaceRound = 'Third Place Match';
+    // // if (
+    //     isInThird &&
+    //     bestFinish &&
+    //     bestFinish.round === thirdPlaceRound &&
+    //     !bestFinish.years.includes(new Date().getFullYear())
+    // ) {
+    //     bestFinish.years.push(new Date().getFullYear());
+    // } else if (isInThird && !bestFinish) {
+    //     bestFinish = {
+    //         round: thirdPlaceRound,
+    //         years: [new Date().getFullYear()],
+    //     };
+    // } else if (isInThird) {
+    //     bestFinish =
+    // }
 
     for (const officeRounds of Object.values(activeTournament.rounds)) {
         for (const [roundName, matches] of Object.entries(officeRounds)) {

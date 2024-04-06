@@ -16,7 +16,12 @@ import {
 import { MatchInfo, Result, BracketMatch, Tournament, Round, NewPlayer } from '../Types/dataTypes';
 import { calculateElo } from '../Utils/eloUtils';
 import { isRecentMatch } from '../Utils/matchUtils';
-import { getNextMatchId, getRoundName } from '../Utils/tournamentUtils';
+import {
+    countMatchesByTournamentAndOffice,
+    getNextMatchId,
+    getRoundName,
+    isPlayerInThirdPlaceMatch,
+} from '../Utils/tournamentUtils';
 import { updateTournamentInfo } from './tournaments';
 
 const updateRecentMatchesArray = (newMatchId, existingRecentMatches, maxMatches = 20) => {
@@ -53,7 +58,7 @@ const determineRoundWinner = (
     player1: string,
     player2: string,
     winningGame: number,
-): { winner: string | null; winsPlayer1: number; winsPlayer2: number } => {
+): { winner: string | null; loser: string | null; winsPlayer1: number; winsPlayer2: number } => {
     let winsPlayer1 = 0,
         winsPlayer2 = 0;
 
@@ -65,13 +70,13 @@ const determineRoundWinner = (
         }
 
         if (winsPlayer1 === winningGame) {
-            return { winner: player1, winsPlayer1, winsPlayer2 };
+            return { winner: player1, loser: player2, winsPlayer1, winsPlayer2 };
         } else if (winsPlayer2 === winningGame) {
-            return { winner: player2, winsPlayer1, winsPlayer2 };
+            return { winner: player2, loser: player1, winsPlayer1, winsPlayer2 };
         }
     }
 
-    return { winner: null, winsPlayer1, winsPlayer2 };
+    return { winner: null, loser: null, winsPlayer1, winsPlayer2 };
 };
 
 const advanceToNextRound = (
@@ -135,7 +140,9 @@ export const addTournamentMatch = async (
     match.scores1.push(player1Score);
     match.scores2.push(player2Score);
 
-    const winningGame = roundName === 'Finals' || roundName == 'Semifinals' ? 3 : 2;
+    const isThird = isPlayerInThirdPlaceMatch(playerA, tournament, office);
+
+    const winningGame = roundName === 'Finals' || roundName == 'Semifinals' || isThird ? 3 : 2;
 
     const roundResults = determineRoundWinner(
         match.scores1,
@@ -145,8 +152,8 @@ export const addTournamentMatch = async (
         winningGame,
     );
 
-    if (roundResults.winner) {
-        const { winner: winnerId } = roundResults;
+    if (roundResults.winner && roundResults.loser) {
+        const { winner: winnerId, loser: loserId } = roundResults;
         match.winner = winnerId;
         const roundRegex = round.match(/round(\d+)/);
         let roundNumber = 1;
@@ -156,13 +163,22 @@ export const addTournamentMatch = async (
 
         const nextMatchId = getNextMatchId(tournament.seeds[office].length, matchId, roundNumber);
         const winnerSeed = player1.playerId === winnerId ? player1.seed : player2.seed;
-        if (winnerSeed) {
+        const loserSeed = player1.playerId === winnerId ? player2.seed : player1.seed;
+        const matchCount = countMatchesByTournamentAndOffice(tournament, office);
+        const finalId = matchCount - 1;
+        const thirdPlaceId = matchCount;
+        const isNextRoundFinal = nextMatchId === finalId;
+        const isFinalOrThird = matchId === finalId || matchId === thirdPlaceId;
+
+        if (winnerSeed && !isFinalOrThird) {
             advanceToNextRound(newRounds, matchId, nextMatchId, winnerSeed, winnerId);
+        }
+        if (loserSeed && isNextRoundFinal && !isFinalOrThird) {
+            advanceToNextRound(newRounds, matchId, nextMatchId + 1, loserSeed, loserId);
         }
     }
 
     updateRoundWithMatch(newRounds, match);
-
     const newTournament = { ...tournament, rounds: { ...tournament.rounds, [office]: newRounds } };
     await updateTournamentInfo(newTournament);
 };

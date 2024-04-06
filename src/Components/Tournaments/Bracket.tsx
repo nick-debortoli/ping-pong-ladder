@@ -50,7 +50,12 @@ const Bracket: React.FC<BracketProps> = ({ activeOffice }) => {
                             string,
                             BracketMatch[],
                         ][]
-                    ).sort((a, b) => b[1].length - a[1].length);
+                    ).sort((a, b) => {
+                        const roundNumberA = parseInt(a[0].replace('round', ''), 10);
+                        const roundNumberB = parseInt(b[0].replace('round', ''), 10);
+                        return roundNumberA - roundNumberB;
+                    });
+
                     setRounds(sortedRounds);
                 }
             } catch (error) {
