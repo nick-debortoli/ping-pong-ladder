@@ -14,3 +14,10 @@
         z-index: 100;
     }
 }
+
+@media (max-width: 780px) {
+    .players-container .players-top-bar {
+        top: 12vh;
+        right: 5vw;
+    }
+}

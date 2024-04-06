@@ -24,3 +24,20 @@
         position: relative;
     }
 }
+
+@media (max-width: 780px) {
+    .h2h {
+        .h2h-cards-container {
+            padding: 0 2em;
+        }
+        .h2h-player-card .h2h-player-container .h2h-card {
+            display: none;
+        }
+
+        .h2h-wins-circle-container {
+            top: 50%;
+            width: 60vmin;
+            font-size: 0.75em;
+        }
+    }
+}
