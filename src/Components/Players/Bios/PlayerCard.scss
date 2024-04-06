@@ -128,7 +128,7 @@
             position: relative;
             justify-content: space-around;
             display: flex;
-            font-size: 1em;
+            font-size: 0.85em;
 
             .stat-title {
                 position: absolute;
@@ -138,7 +138,7 @@
                 background-color: #fff;
                 color: $dark-background;
                 padding: 0 10px;
-                font-size: 20px; // Adjust font size as needed
+                font-size: 1.25em;
                 font-weight: bold;
             }
 
