@@ -12,7 +12,9 @@ interface MatchProps {
 const Match: React.FC<MatchProps> = ({ match, tournament, activeOffice }) => {
     const { getPlayerById } = usePlayers();
     const { matchId, player1, player2, scores1, scores2, winner } = match;
-    const isThirdPlace = isThirdPlaceMatch(tournament, activeOffice, matchId || 0);
+    const isThirdPlace = tournament.rounds
+        ? isThirdPlaceMatch(tournament, activeOffice, matchId ?? 0)
+        : false;
 
     const getPlayerInfo = async (player: BracketPlayer | 'Bye' | null) => {
         if (!player || player === 'Bye') {

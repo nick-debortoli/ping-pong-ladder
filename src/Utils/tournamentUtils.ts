@@ -9,55 +9,59 @@ import {
     TournamentStats,
 } from '../Types/dataTypes';
 
-const generateSeeds = (order: number): (number | null)[] => {
-    let adjustedOrder = 1;
-    while (adjustedOrder < order) adjustedOrder *= 2;
+function generateSeeds(numPlayers: number) {
+    const seeds: (number | null)[] = [];
+    const nextPowerOfTwo = Math.pow(2, Math.ceil(Math.log2(numPlayers)));
 
-    const fillBracket = (start: number, end: number): (number | null)[] => {
-        if (start === end) return start <= order ? [start] : [null];
+    // Initialize the seeds array with placeholders
+    for (let i = 0; i < nextPowerOfTwo; i++) {
+        seeds.push(i < numPlayers ? i + 1 : null);
+    }
 
-        const mid = Math.floor((start + end) / 2);
-        const leftBracket = fillBracket(start, mid);
-        const rightBracket = fillBracket(mid + 1, end);
+    function shuffleSeeds(arr) {
+        for (let i = 1; i < arr.length; i *= 2) {
+            const result: number[] = [];
+            for (let j = 0; j < arr.length; j += i * 2) {
+                const left = arr.slice(j, j + i);
+                const right = arr.slice(j + i, j + 2 * i);
+                for (let k = 0; k < i; k++) {
+                    if (left[k] !== undefined) result.push(left[k]);
+                    if (right[k] !== undefined) result.push(right[k]);
+                }
+            }
+            arr = result;
+        }
+        return arr;
+    }
 
-        return leftBracket.flatMap((v, i) => [v, rightBracket[i]]);
-    };
-
-    return fillBracket(1, adjustedOrder);
-};
+    return shuffleSeeds(seeds);
+}
 
 export const generateTournamentMatchups = (playerIds: string[]): [BracketMatch[], number] => {
     const seeds = generateSeeds(playerIds.length);
-
-    const totalSlots = seeds.length;
     const matchups: BracketMatch[] = [];
-
-    const extendedPlayers: Array<string | null> = [...playerIds];
-    while (extendedPlayers.length < totalSlots) {
-        extendedPlayers.push(null);
-    }
-
     let matchNumber = 1;
-    // Create matchups
+
     for (let i = 0; i < seeds.length / 2; i++) {
         const seed1 = seeds[i];
-        const seed2 = seeds[seeds.length - i - 1];
+        const player1 =
+            seed1 !== null && seed1 <= playerIds.length
+                ? { seed: seed1, playerId: playerIds[seed1 - 1] }
+                : 'Bye';
 
-        const player1 = seed1 !== null ? extendedPlayers[seed1 - 1] : null;
-        const player2 = seed2 !== null ? extendedPlayers[seed2 - 1] : null;
+        const seed2 = seeds[seeds.length - 1 - i];
+        const player2 =
+            seed2 !== null && seed2 <= playerIds.length
+                ? { seed: seed2, playerId: playerIds[seed2 - 1] }
+                : 'Bye';
 
         matchups.push({
-            player1: player1 ? { seed: seed1, playerId: player1 } : 'Bye',
-            player2: player2 ? { seed: seed2, playerId: player2 } : 'Bye',
-            matchId: matchNumber,
+            player1,
+            player2,
+            matchId: matchNumber++,
         });
-
-        matchNumber++;
-
-        if (matchups.length - 1 === playerIds.length / 2) {
-            break;
-        }
     }
+
     return [matchups, matchNumber];
 };
 
@@ -105,6 +109,7 @@ export const getNextMatchId = (playersCount: number, matchId: number, round: num
 
 export const generateTournamentRounds = (playerIds: string[]): Round => {
     const [matchups, startingMatchNumber] = generateTournamentMatchups(playerIds);
+
     const rounds: { [key: string]: BracketMatch[] } = {};
     rounds['round1'] = matchups;
 

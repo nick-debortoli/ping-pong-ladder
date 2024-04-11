@@ -16,7 +16,6 @@ const Bracket: React.FC<BracketProps> = ({ activeOffice }) => {
     const [rounds, setRounds] = useState<any | null>(null);
     const { getActiveTournament } = useTournaments();
     const activeTournament = getActiveTournament();
-
     const [tournament, setTournament] = useState<Tournament | null>(activeTournament);
 
     useEffect(() => {
